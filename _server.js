@@ -992,4 +992,4 @@ app.put('/contractor/update/:id', async (req, res) => {
 });
 
 //---------------------------------LISTENING TO PORT
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+//app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
