@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(to left,  rgb(245, 190, 9),rgb(75, 72, 72));
+            padding: 1rem; /* Increase padding */
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.5rem; /* Increase font size */
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.25rem; /* Increase font size */
+        }
+
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #ddd;
+        }
+
+        .dropdown-menu a {
+            color: #000;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #ddd;
+        }
+
+        .active .nav-link {
+            color: grey;
+            transform: scale(0.5);
+            transition: 1s;
+        }
+
+        .active .nav-link:hover {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid"> <!-- Changed from 'container' to 'container-fluid' -->
+            <a class="navbar-brand" href="/">BuildTrack</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item <% if (currentPage==='home') { %>active<% } %>">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <% if (role==='MD') { %>
+                    <li class="nav-item <% if (currentPage==='create_project') { %>active<% } %>">
+                        <a class="nav-link" href="/create_project">Create Project</a>
+                    </li>
+                    <li class="nav-item <% if (currentPage==='view_projects') { %>active<% } %>">
+                        <a class="nav-link" href="/projects">View Projects</a>
+                    </li>
+                    <% } %>
+                    <% if (role==='Manager') { %>
+                    <li class="nav-item <% if (currentPage==='manager_projects') { %>active<% } %>">
+                        <a class="nav-link" href="/manager_projects">View Projects</a>
+                    </li>
+                    <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fruit Input</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      width: 50%;
+      margin: 50px auto;
+    }
+    .fruit-inputs {
+      margin-top: 20px;
+    }
+    .fruit-input {
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .fruit-list {
+      margin-top: 30px;
+    }
+    .fruit-list ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .fruit-list li {
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Enter Number of Fruits</h1>
+    <form id="fruitForm" method="POST" action="/submit">
+      <label for="numFruits">How many fruits?</label>
+      <input type="number" id="numFruits" name="numFruits" min="1" required>
+      <button type="button" id="generateInputs">Generate Inputs</button>
+
+      <div class="fruit-inputs" id="fruitInputs"></div>
+      
+      <button type="submit" id="submitForm" style="display:none;">Submit Fruits</button>
+    </form>
+
+    <div class="fruit-list">
+      <h2>Stored Fruits:</h2>
+      <% if (fruits.length > 0) { %>
+        <ul>
+          <% fruits.forEach(function(fruit) { %>
+            <% fruit.names.forEach(function(name) { %>
+              <li><%= name %></li>
+            <% }); %>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p>No fruits saved yet.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('generateInputs').addEventListener('click', function() {
+      const numFruits = document.getElementById('numFruits').value;
+      const fruitInputsContainer = document.getElementById('fruitInputs');
+      fruitInputsContainer.innerHTML = ''; // Clear existing inputs
+
+      for (let i = 1; i <= numFruits; i++) {
+        const inputDiv = document.createElement('div');
+        inputDiv.classList.add('fruit-input');
+        inputDiv.innerHTML = `
+          <label for="fruit${i}">Fruit ${i} Name:</label>
+          <input type="text" id="fruit${i}" name="fruits[]" required>
+        `;
+        fruitInputsContainer.appendChild(inputDiv);
+      }
+
+      document.getElementById('submitForm').style.display = 'block'; // Show submit button
+    });
+  </script>
+</body>
+</html>

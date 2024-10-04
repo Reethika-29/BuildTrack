@@ -1,0 +1,289 @@
+<%- include('./common/navbar', { role , currentPage }); %>
+
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      body {
+        background: url('/images/pattern.png') no-repeat center center fixed;
+        background-size: cover;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      nav {
+        width: 100%;
+        position: relative;
+        z-index: 2;
+      }
+
+      input[type="text"] {
+        color: black;
+      }
+
+      .card {
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        width: 90%;
+        max-width: 600px;
+        color: white;
+        text-align: center;
+        z-index: 1;
+        backdrop-filter: blur(5px);
+      }
+
+      input[type="date"],
+      input[type="number"] {
+        width: calc(100% - 16px);
+        padding: 8px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: black;
+      }
+
+      button {
+        background-color: rgb(245, 190, 9);
+        color: rgb(75, 72, 72);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: rgb(200, 160, 7);
+      }
+
+      #results {
+        margin-top: 20px;
+        text-align: left;
+        /* Align text to the left */
+      }
+
+      h2 {
+        color: rgb(245, 190, 9);
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-top: 10px;
+        text-align: left;
+      }
+
+      video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+
+      .stage-info {
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid rgba(245, 190, 9, 0.5);
+        /* Border for better visibility */
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="main-content">
+      <div class="overlay"></div>
+
+      <div class="card">
+        <h2>Milestone</h2>
+        <form id="stageForm" action="/milestone" method="POST">
+          <div id="stageInputs"></div>
+          <input type="hidden" id="projectId" name="projectId" value="<%= project.id %>">
+          <button type="button" onclick="addStage()">Add Stage</button>
+          <button type="submit">Submit Milestones</button>
+        </form>
+        <div id="results"></div>
+      </div>
+
+      <script>
+        let stageCount = 0;
+        let existingStageCount = 0;
+        let stages = []; // Store stage data for editing
+
+        window.onload = async function () {
+          const projectId = '<%= project.id %>';
+
+          try {
+            const response = await fetch(`/milestones/${projectId}`);
+            const data = await response.json();
+
+            if (data.success) {
+              stages = data.milestoneStage.stages; // Save existing stages
+              existingStageCount = stages.length;
+
+              const resultsDiv = document.getElementById('results');
+              resultsDiv.innerHTML = ''; // Clear previous results
+
+              stages.forEach((stage, index) => {
+                // Format date to readable string
+                const formatDate = (dateString) => {
+                  if (!dateString) return 'N/A';
+                  const date = new Date(dateString);
+                  return date.toLocaleDateString(); // Converts to a readable date string
+                };
+
+                const stageInfo = `
+          <div class="stage-info" id="stage-${index}">
+            <strong>Stage ${stage.stage}: ${stage.name}</strong><br>
+            <strong>Estimated Start:</strong> <span id="est-start-${index}">${formatDate(stage.estimated.start)}</span><br>
+            <strong>Estimated End:</strong> <span id="est-end-${index}">${formatDate(stage.estimated.end)}</span><br>
+            <strong>Actual Start:</strong> <span id="act-start-${index}">${formatDate(stage.actual.start)}</span><br>
+            <strong>Actual End:</strong> <span id="act-end-${index}">${formatDate(stage.actual.end)}</span><br>
+            <button onclick="editStage(${index})">Edit</button>
+            <div id="edit-form-${index}" style="display: none;">
+              <label>Stage Name:</label>
+              <input type="text" id="stageName${index}" value="${stage.name}" required>
+              <label>Estimated Start Date:</label>
+              <input type="date" id="estimatedStart${index}" value="${stage.estimated.start || ''}" required>
+              <label>Estimated End Date:</label>
+              <input type="date" id="estimatedEnd${index}" value="${stage.estimated.end || ''}" required>
+              <label>Actual Start Date:</label>
+              <input type="date" id="actualStart${index}" value="${stage.actual.start || ''}">
+              <label>Actual End Date:</label>
+              <input type="date" id="actualEnd${index}" value="${stage.actual.end || ''}">
+              <button onclick="saveStage(${index})">Save</button>
+            </div>
+          </div>`;
+                resultsDiv.innerHTML += stageInfo; // Append stage information to the results div
+              });
+            } else {
+              alert(data.message);
+            }
+          } catch (error) {
+            console.error('Error fetching milestone details:', error);
+            alert('Failed to fetch milestone details.');
+          }
+        };
+
+        function addStage() {
+          stageCount = existingStageCount;
+          stageCount++;
+          const stageInputs = document.getElementById('stageInputs');
+          alert(stageCount);
+
+          const stageDiv = document.createElement('div');
+          stageDiv.className = 'stage-info';
+          stageDiv.id = `stage-${stageCount}`;
+
+          stageDiv.innerHTML = `
+        <h3>Stage ${stageCount}</h3>
+        <label for="stageName${stageCount}">Stage Name:</label>
+        <input type="text" id="stageName${stageCount}" name="stages[${stageCount}][name]" required>
+
+        <label for="estimatedStart${stageCount}">Estimated Start Date:</label>
+        <input type="date" id="estimatedStart${stageCount}" name="stages[${stageCount}][estimatedStart]" required
+               onchange="validateDate(${stageCount}, 'estimated')">
+
+        <label for="estimatedEnd${stageCount}">Estimated End Date:</label>
+        <input type="date" id="estimatedEnd${stageCount}" name="stages[${stageCount}][estimatedEnd]" required
+               onchange="validateDate(${stageCount}, 'estimated')">
+
+        <label for="actualStart${stageCount}">Actual Start Date:</label>
+        <input type="date" id="actualStart${stageCount}" name="stages[${stageCount}][actualStart]"
+               onchange="validateDate(${stageCount}, 'actual')">
+
+        <label for="actualEnd${stageCount}">Actual End Date:</label>
+        <input type="date" id="actualEnd${stageCount}" name="stages[${stageCount}][actualEnd]"
+               onchange="validateDate(${stageCount}, 'actual')">
+    `;
+
+          stageInputs.appendChild(stageDiv);
+        }
+
+        function validateDate(stageNumber, type) {
+          const estimatedStart = document.getElementById(`estimatedStart${stageNumber}`);
+          const estimatedEnd = document.getElementById(`estimatedEnd${stageNumber}`);
+          const actualStart = document.getElementById(`actualStart${stageNumber}`);
+          const actualEnd = document.getElementById(`actualEnd${stageNumber}`);
+
+          if (type === 'estimated') {
+            if (estimatedStart.value && estimatedEnd.value && estimatedEnd.value < estimatedStart.value) {
+              alert('Estimated end date cannot be earlier than the estimated start date.');
+              estimatedEnd.value = ''; // Clear invalid date
+            }
+          }
+
+          if (type === 'actual') {
+            if (actualStart.value && actualEnd.value && actualEnd.value < actualStart.value) {
+              alert('Actual end date cannot be earlier than the actual start date.');
+              actualEnd.value = ''; // Clear invalid date
+            }
+          }
+        }
+
+
+        function editStage(index) {
+          const editForm = document.getElementById(`edit-form-${index}`);
+          editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none'; // Toggle visibility
+        }
+
+        async function saveStage(index) {
+          const updatedStage = {
+            name: document.getElementById(`stageName${index}`).value,
+            estimatedStart: document.getElementById(`estimatedStart${index}`).value,
+            estimatedEnd: document.getElementById(`estimatedEnd${index}`).value,
+            actualStart: document.getElementById(`actualStart${index}`).value,
+            actualEnd: document.getElementById(`actualEnd${index}`).value
+          };
+
+          try {
+            const response = await fetch(`/milestone/${stages[index]._id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(updatedStage)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+              alert('Stage updated successfully!');
+              window.location.reload(); // Reload the page to fetch the updated data
+            } else {
+              alert(data.message);
+            }
+          } catch (error) {
+            console.error('Error saving stage details:', error);
+            alert('Failed to save stage details.');
+          }
+        }
+      </script>
+    </div>
+  </body>
+
+  </html>

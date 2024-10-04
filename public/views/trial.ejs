@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Input</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    form {
+      width: 50%;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="date"], button[type="submit"], button[type="button"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button[type="submit"], button[type="button"] {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+    }
+    button[type="submit"]:hover, button[type="button"]:hover {
+      background-color: #3e8e41;
+    }
+    table {
+      width: 50%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Date Input</h1>
+  <form action="/save-date" method="post">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required>
+    <button type="submit">Save Dates</button>
+  </form>
+
+  <h2>Saved Dates</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% dates.forEach(date => { %>
+        <tr>
+          <form action="/update-date/<%= date._id %>" method="post">
+            <td><input type="date" name="startDate" value="<%= date.startDate.toISOString().split('T')[0] %>" required></td>
+            <td><input type="date" name="endDate" value="<%= date.endDate.toISOString().split('T')[0] %>" required></td>
+            <td>
+              <button type="submit">Save</button>
+            </td>
+          </form>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>

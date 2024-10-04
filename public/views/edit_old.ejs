@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 1rem;
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #ddd;
+        }
+
+        .dropdown-menu a {
+            color: #000;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #ddd;
+        }
+
+        .active .nav-link {
+            color: grey;
+            transform: scale(0.5);
+            transition: 1s;
+        }
+
+        .active .nav-link:hover {
+            cursor: not-allowed;
+        }
+
+        .edit-project {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #f8f9fa;
+        }
+
+        .title {
+            text-align: center;
+            width: 100%;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .categtory-image {
+            background-image: url(../assets/flyover.jpg);
+            background-size: cover;
+            background-position: center;
+            height: 200px;
+            width: 70%;
+            margin: 10px auto;
+            border-radius: 8px;
+        }
+
+        .edit-project div {
+            margin: 10px 0;
+        }
+
+        .edit-project label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">BuildTrack</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item <%= currentPage === 'home' ? 'active' : '' %>">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <% if (role === 'MD') { %>
+                <li class="nav-item <%= currentPage === 'create_project' ? 'active' : '' %>">
+                    <a class="nav-link" href="/create_project">Create Project</a>
+                </li>
+                <li class="nav-item <%= currentPage === 'view_projects' ? 'active' : '' %>">
+                    <a class="nav-link" href="/projects">View Projects</a>
+                </li>
+                <% } %>
+                <% if (role === 'Manager') { %>
+                <li class="nav-item <%= currentPage === 'manager_projects' ? 'active' : '' %>">
+                    <a class="nav-link" href="/manager_projects">View Projects</a>
+                </li>
+                <% } %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="title">
+            <%= project.title %>
+        </div>
+
+        <!-- Managers can edit -->
+        <% if (role == 'Manager') { %>
+            <div class="edit-project">
+                <% if (project.category === 'flyover') { %>
+                    <div class="categtory-image"></div>
+                <% } %>
+                <div>
+                    <label>Description:</label> <%= project.description %>
+                </div>
+                <div>
+                    <label>Location:</label> <%= project.location %>
+                </div>
+                <div>
+                    <label>Budget:</label> <%= project.budget %>
+                </div>
+                <div>
+                    <label>Category:</label> <%= project.category %>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- MD's Can only View -->
+        <% if (role == 'MD') { %>
+            <div class="edit-project">
+                <div>
+                    <label>Description:</label> <%= project.description %>
+                </div>
+                <div>
+                    <label>Location:</label> <%= project.location %>
+                </div>
+                <div>
+                    <label>Budget:</label> <%= project.budget %>
+                </div>
+                <div>
+                    <label>Category:</label> <%= project.category %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(245, 245, 245);
+            margin: 0;
+            padding: 0;
+            color: rgb(75, 72, 72);
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: rgb(75, 72, 72);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid rgb(75, 72, 72);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            color: rgb(75, 72, 72);
+        }
+        .card h2 {
+            color: rgb(245, 190, 9);
+        }
+        .card .content {
+            margin-top: 10px;
+        }
+        .card .content p {
+            margin: 5px 0;
+        }
+        .timeline {
+            height: 200px;
+            background-color: rgb(245, 190, 9);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .timeline h2 {
+            margin: 0;
+        }
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress .bar {
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 5px;
+            width: 100%;
+            margin-right: 10px;
+        }
+        .progress .bar span {
+            display: block;
+            height: 100%;
+            background-color: rgb(245, 190, 9);
+            width: 70%; /* Example progress width */
+            border-radius: 5px;
+        }
+        .progress .status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Construction Project Dashboard</h1>
+        </div>
+        <div class="dashboard">
+            <!-- Current Project Status -->
+            <div class="card">
+                <h2>Current Project Status</h2>
+                <div class="content">
+                    <p><strong>Active Projects:</strong> Project A, Project B</p>
+                    <p><strong>Phases:</strong> Design, Construction, Inspection</p>
+                    <p><strong>Progress:</strong> 45% Completed</p>
+                </div>
+            </div>
+            <!-- Project Milestones -->
+            <div class="card">
+                <h2>Project Milestones</h2>
+                <div class="content">
+                    <p><strong>Key Dates:</strong> 
+                        <br>Design Phase Complete: Sep 15, 2024
+                        <br>Construction Phase Start: Oct 1, 2024
+                    </p>
+                    <p><strong>Deadlines:</strong> 
+                        <br>Inspection Completion: Dec 1, 2024
+                    </p>
+                </div>
+            </div>
+            <!-- Budget Overview -->
+            <div class="card">
+                <h2>Budget Overview</h2>
+                <div class="content">
+                    <p><strong>Total Budget:</strong> Rs 500,000</p>
+                    <p><strong>Spent Amount:</strong> Rs 200,000</p>
+                    <p><strong>Remaining Funds:</strong> Rs 300,000</p>
+                </div>
+            </div>
+            <!-- Timeline/Gantt Chart -->
+            <div class="card timeline">
+                <h2>Project Timeline</h2>
+                <!-- Gantt chart placeholder -->
+                <p>COUNTDOWN</p>
+            </div>
+            <!-- Tasks and To-Dos -->
+            <div class="card">
+                <h2>Tasks and To-Dos</h2>
+                <div class="content">
+                    <p><strong>Upcoming Tasks:</strong> Task A due Sep 10, 2024</p>
+                    <p><strong>Task Assignment:</strong> Task B assigned to John Doe</p>
+                    <p><strong>Task Status:</strong> Task A - In Progress, Task B - Not Started</p>
+                </div>
+            </div>
+            <!-- Team and Resource Management -->
+            <div class="card">
+                <h2>Team and Resource Management</h2>
+                <div class="content">
+                    <p><strong>Team Members:</strong> Jane Smith, John Doe</p>
+                    <p><strong>Resource Allocation:</strong> 10 workers, 5 machines</p>
+                    <p><strong>Work Shifts:</strong> 8 AM - 4 PM, 4 PM - 12 AM</p>
+                </div>
+            </div>
+            <!-- Document Management -->
+            <div class="card">
+                <h2>Document Management</h2>
+                <div class="content">
+                    <p><strong>Document Repository:</strong> Blueprints, Permits</p>
+                    <p><strong>Upload/Download:</strong> <a href="#">Upload Document</a> | <a href="#">Download Document</a></p>
+                </div>
+            </div>
+            <!-- Financials -->
+            <div class="card">
+                <h2>Financials</h2>
+                <div class="content">
+                    <p><strong>Expense Tracking:</strong> Rs 50,000 spent on materials</p>
+                    <p><strong>Invoices:</strong> 3 invoices pending</p>
+                    <p><strong>Payments:</strong> Last payment on Aug 25, 2024</p>
+                </div>
+            </div>
+            <!-- Progress Tracking -->
+            <div class="card">
+                <h2>Progress Tracking</h2>
+                <div class="content">
+                    <p><strong>Daily/Weekly Reports:</strong> Weekly summary report available</p>
+                    <p><strong>Photographic Evidence:</strong> <a href="#">View Photos</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

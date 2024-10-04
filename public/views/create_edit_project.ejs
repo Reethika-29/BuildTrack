@@ -1,0 +1,114 @@
+<%- include('./common/navbar', { role , currentPage }); %>
+
+<div class="outer-div">
+    <div class="form-container">
+        <h2>Edit Project</h2>
+        <form class="form" action="/projects/<%= project._id %>?_method=PUT" method="POST">
+            <div class="form-group">
+                <label for="name">Project Title</label>
+                <input type="text" id="name" name="title" value="<%= project.title %>" required>
+            </div>
+            <div class="form-group">
+                <label for="manager">Manager Username</label>
+                <input type="text" id="manager" name="manager" value="<%= project.manager %>" readonly required>
+            </div>
+            <div class="form-group">
+                <label for="desc">Description</label>
+                <input type="text" id="desc" name="description" value="<%= project.description %>" required>
+            </div>
+            <div class="form-group">
+                <label for="loc">Location</label>
+                <input type="text" id="loc" name="location" value="<%= project.location %>" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget Allocation</label>
+                <input type="number" id="budget" name="budget" value="<%= project.budget %>" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" id="category" name="category" value="<%= project.category %>" required>
+            </div>
+            <div class="form-group">
+                <label for="from-date">From Date</label>
+                <input type="date" id="from-date" name="fromDate" value="<%= project.fromDate.toISOString().split('T')[0] %>" required>
+            </div>
+            <div class="form-group">
+                <label for="to-date">To Date</label>
+                <input type="date" id="to-date" name="toDate" value="<%= project.toDate.toISOString().split('T')[0] %>" required>
+            </div>
+            <div class="form-group">
+                <label for="MD">MD</label>
+                <input type="text" id="MD" name="MD" value="<%= project.MD %>" readonly required>
+            </div>
+            <button class="form-submit-btn" type="submit" onclick="success()">Update Project</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        background: url('built.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .outer-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 60px);
+        padding-top: 60px;
+        background-color: rgba(18, 18, 18, 0.8);
+    }
+
+    .form-container {
+        width: 600px;
+        background: rgba(33, 33, 33, 0.8);
+        padding: 32px 24px;
+        color: rgb(225, 184, 184);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+    }
+
+    .form-group label {
+        margin-bottom: 5px;
+        color: #8b8686;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        color: rgb(223, 194, 194);
+        background-color: transparent;
+        border: 1px solid #414141;
+    }
+
+    .form-submit-btn {
+        background-color: #313131;
+        padding: 12px 16px;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+    }
+
+    .form-submit-btn:hover {
+        background-color: #fff;
+        color: #313131;
+    }
+</style>
+<script>
+
+function success()
+{
+    alert("Project details Updated");
+}
+</script>

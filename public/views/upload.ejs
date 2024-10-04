@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      background: url('/images/pattern.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .container {
+      margin-top: 100px;
+      max-width: 600px; /* Limit the width for better appearance */
+    }
+    .card {
+      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+      padding: 20px; /* Add some padding inside the card */
+      color: white; /* Set text color to white for contrast */
+      text-align: center; /* Center text */
+      z-index: 1; /* Ensure the card is above background */
+      backdrop-filter: blur(5px); /* Apply blur effect to background */
+    }
+    .card-header {
+      background-color: rgb(245, 190, 9);
+      color: #fff;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    .btn-upload {
+      background-color: rgb(245, 190, 9);
+      color: #fff;
+    }
+    .btn-upload:hover {
+      background-color: rgb(220, 170, 9);
+    }
+    h5 {
+      font-weight: bold;
+    }
+    .form-label {
+      font-weight: bold; /* Make labels bold */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header text-center">
+        <h5 class="card-title">Upload Site Approval and Site Related Documents</h5>
+      </div>
+      
+      <div class="card-body">
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="projectId" value="<%= project.id %>">
+          <div class="mb-4">
+            <label for="document" class="form-label">Choose Document</label>
+            <input type="file" class="form-control" id="document" name="document" required>
+          </div>
+          <div class="mb-4">
+            <label for="filename" class="form-label">Filename</label>
+            <input type="text" class="form-control" id="filename" name="filename" required>
+          </div>
+          <button type="submit" class="btn btn-upload btn-lg w-100">Upload</button> <!-- Full-width button -->
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js">
+   
+  </script>
+</body>
+</html>

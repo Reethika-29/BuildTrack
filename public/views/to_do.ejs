@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('/images/pattern.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .todo-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            border-top: 6px solid rgb(245, 190, 9);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(75, 72, 72);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        #todoForm {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #todoInput, #todoDate {
+            width: 65%;
+            padding: 10px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        #todoInput:focus, #todoDate:focus {
+            border-color: rgb(245, 190, 9);
+            outline: none;
+        }
+
+        button {
+            width: 30%;
+            background-color: rgb(245, 190, 9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: rgb(200, 155, 5);
+            transform: scale(1.05);
+        }
+
+        #todoList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .todo-item:hover {
+            background-color: #eaeaea;
+            transform: scale(1.01);
+        }
+
+        .todo-item.overdue {
+            background-color: #ffcccc;
+            border-color: #ff0000;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h1>To-Do List for Project: <%= project.title %></h1>
+        <form id="todoForm" action="/todo/<%= projectId %>/add" method="post">
+            <input type="text" id="todoInput" name="task" placeholder="Add a new task..." required>
+            <input type="date" id="todoDate" name="dueDate" required>
+            <button type="submit">Add Task</button>
+        </form>
+        
+        <!-- Render existing todos -->
+        <ul id="todoList">
+            <% if (project.todos && project.todos.length > 0) { %>
+                <% project.todos.forEach(todo => { %>
+                    <% let dueDate = new Date(todo.dueDate); %>
+                    <% let formattedDate = !isNaN(dueDate.getTime()) ? dueDate.toISOString().split('T')[0] : ''; %>
+                    <li class="todo-item" id="todo-<%= todo._id %>" data-due-date="<%= formattedDate %>">
+                        <input type="checkbox" onchange="deleteTodoItem('<%= todo._id %>')" <%= todo.completed ? 'checked' : '' %> >
+                        <span>
+                            <%= todo.task %> (Due: <%= !isNaN(dueDate.getTime()) ? dueDate.toLocaleDateString() : 'Invalid Date' %>)
+                        </span>
+                    </li>
+                <% }) %>
+            <% } else { %>
+                <li class="todo-item">
+                    <span>No tasks available.</span>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const todos = document.querySelectorAll('.todo-item');
+
+            todos.forEach(todo => {
+                const dueDate = new Date(todo.getAttribute('data-due-date'));
+                const currentDate = new Date();
+
+                // Check if the task is overdue
+                if (dueDate < currentDate) {
+                    todo.classList.add('overdue');
+                }
+            });
+
+            // Function to delete a todo item
+            window.deleteTodoItem = function (todoId) {
+                fetch(`/todo/${todoId}/delete`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`todo-${todoId}`).remove();
+                    }
+                })
+                .catch(err => console.error(err));
+            };
+
+            // Function to toggle task completion
+            window.toggleComplete = function (todoId) {
+                fetch(`/todo/${todoId}/complete`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`todo-${todoId}`).remove();
+                    }
+                })
+                .catch(err => console.error(err));
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <body>
+            <script src="webcam.js"></script>
+<div id="my_camera" style="width:1280px; height:720px;"></div>
+<div id="my_result"></div>
+<script language="JavaScript">
+    Webcam.attach( '#my_camera' );
+    
+    function take_snapshot() {
+        Webcam.snap( function(data_uri) {
+            document.getElementById('my_result').innerHTML = '<img src="'+data_uri+'"/>';
+        } );
+    }
+</script>
+        </body>
+    </head>
+</html>

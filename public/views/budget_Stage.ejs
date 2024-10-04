@@ -1,0 +1,206 @@
+<%- include('./common/navbar', { role , currentPage }); %>
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Milestone Card</title>
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+        <style>
+            body {
+                background: url('/images/pattern.png') no-repeat center center fixed;
+                background-size: cover;
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                min-height: 100vh;
+                background-color: #f0f0f0;
+                overflow-y: auto;
+            }
+
+            .container {
+                margin-top: 60px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                flex-grow: 1;
+                width: 100%;
+            }
+
+            .card {
+                background-color: rgba(0, 0, 0, 0.8);
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                width: 90%;
+                max-width: 600px;
+                color: white;
+                text-align: center;
+                z-index: 1;
+                margin-bottom: 20px;
+                backdrop-filter: blur(5px);
+            }
+
+            input[type="number"] {
+                width: calc(100% - 16px);
+                padding: 8px;
+                margin-top: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                color: #000;
+            }
+
+            button {
+                background-color: rgb(245, 190, 9);
+                color: rgb(75, 72, 72);
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            button:hover {
+                background-color: rgb(200, 160, 7);
+            }
+
+            h2 {
+                color: rgb(245, 190, 9);
+                margin-bottom: 20px;
+            }
+
+            label {
+                display: block;
+                margin-top: 10px;
+                text-align: left;
+            }
+        </style>
+    </head>
+
+    <body data-stage-count="<%= stages ? stages.length : 0 %>">
+        <div class="container">
+            <div class="card">
+                <h2>Estimated Budget for Stages</h2>
+                <form id="milestoneForm" action="/budget_stage_estimate" method="POST">
+                    <div id="stageInputs">
+                        <% if (stages && stages.length> 0) { %>
+                            <% stages.forEach((stage, index)=> { %>
+                                <div>
+                                    <h3 style="color: rgb(245, 190, 9);">Stage <%= stage.stage %>
+                                    </h3>
+                                    <label for="estimated-amount-<%= index + 1 %>">Estimated Amount:</label>
+                                    <input type="number" id="estimated-amount-<%= index + 1 %>" min="0"
+                                        value="<%= stage.estimatedAmount %>" placeholder="Enter estimated amount"><br>
+
+                                    <p style="color: rgb(245, 190, 9);">Total Amount Spent: <%= stage.totalStageAmount ?
+                                            stage.totalStageAmount.toFixed(2) : '0.00' %>
+                                    </p>
+                                </div>
+                                <% }) %>
+                                    <% } %>
+                    </div>
+                    <input type="hidden" id="projectId" name="projectId" value="<%= project.id %>">
+                    <input type="hidden" id="totalEstimatedInput" name="totalEstimatedAmount" value="0">
+
+                    <button type="button" onclick="addStage()">Add Stage</button>
+                    <button type="button" onclick="saveMilestoneDetails()">Submit Details</button>
+                </form>
+            </div>
+
+            <!-- Total Estimated Amount Card -->
+            <div class="card">
+                <h2>Total Estimated Amount</h2>
+                <input type="number" id="totalEstimatedAmountInput" min="0" placeholder="Enter total estimated amount"
+                    style="width: calc(100% - 16px); padding: 8px; border-radius: 4px; color: #000;">
+                <button type="button" onclick="saveMilestoneDetails()">Submit Total Estimated Amount</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Total Amount Spent Across All Stages</h2>
+            <p style="color: rgb(245, 190, 9); font-size: 1.5em;">$<%= totalAmount.toFixed(2) %></p>
+        </div>
+    </div>
+
+        <script>
+            let stageCount = parseInt(document.body.getAttribute('data-stage-count'));
+
+            function addStage() {
+                stageCount++;
+                const stageInputs = document.getElementById('stageInputs');
+
+                const stageDiv = document.createElement('div');
+                stageDiv.innerHTML = `
+            <div>
+                <h3 style="color: rgb(245, 190, 9);">Stage ${stageCount}</h3>
+                <label for="estimated-amount-${stageCount}">Estimated Amount:</label>
+                <input type="number" id="estimated-amount-${stageCount}" min="0" placeholder="Enter estimated amount"><br>
+            </div>`;
+                stageInputs.appendChild(stageDiv);
+            }
+
+            function saveMilestoneDetails() {
+                let stages = [];
+                const projectId = document.getElementById('projectId').value;
+
+                // Calculate total estimated amount from the inputs
+                let totalEstimatedAmount = 0;
+
+                for (let i = 1; i <= stageCount; i++) {
+                    const estimatedAmountInput = document.getElementById(`estimated-amount-${i}`);
+                    const estimatedAmount = parseFloat(estimatedAmountInput.value) || 0;
+
+                    // Validate estimated amount
+                    if (estimatedAmount < 0) {
+                        alert(`Please enter a valid estimated amount for Stage ${i}.`);
+                        return;
+                    }
+
+                    totalEstimatedAmount += estimatedAmount;
+
+                    if (estimatedAmount > 0) {
+                        stages.push({
+                            stage: i,
+                            estimatedAmount: estimatedAmount
+                        });
+                    } else {
+                        alert(`Please enter the estimated amount for Stage ${i}.`);
+                        return;
+                    }
+                }
+
+                // Set the total estimated amount
+                document.getElementById('totalEstimatedInput').value = totalEstimatedAmount;
+
+                fetch('/save_stage_details', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stages, projectId, totalEstimatedAmount })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Estimate details saved successfully!');
+                            // Optionally redirect to a different page or update the UI
+                        } else {
+                            alert('Failed to save estimate details.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while saving stage details.');
+                    });
+            }
+
+
+        </script>
+    </body>
+
+    </html>

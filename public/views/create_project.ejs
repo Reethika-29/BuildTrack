@@ -1,0 +1,184 @@
+<%- include('./common/navbar', { role , currentPage }); %>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        background: url('built.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .outer-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 60px); /* Adjust based on navbar height */
+        padding-top: 60px; /* Adjust based on navbar height */
+        background-color: rgba(18, 18, 18, 0.8); /* Adjust opacity as needed */
+    }
+
+    .form-container {
+        width: 600px;
+        background: rgba(33, 33, 33, 0.8); /* Transparent background */
+        padding: 32px 24px;
+        font-size: 14px;
+        color: rgb(225, 184, 184);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        box-sizing: border-box;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px; /* Add margin to prevent overflow */
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-container button:active {
+        transform: scale(0.95);
+    }
+
+    .form-container .form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-container .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .form-container .form-group label {
+        margin-bottom: 5px;
+        color: #8b8686;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .form-container .form-group input,
+    .form-container .form-group textarea,
+    .form-container .form-group select {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        color: rgb(223, 194, 194);
+        background-color: transparent;
+        border: 1px solid #414141;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .form-container .form-group input::placeholder,
+    .form-container .form-group textarea::placeholder {
+        opacity: 0.5;
+    }
+
+    .form-container .form-group input:focus,
+    .form-container .form-group textarea:focus,
+    .form-container .form-group select:focus {
+        outline: none;
+        border-color: #e81cff;
+    }
+
+    .form-container .form-submit-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: inherit;
+        color: #717171;
+        font-weight: 600;
+        width: 100%;
+        background: #313131;
+        border: 1px solid #414141;
+        padding: 12px 16px;
+        font-size: inherit;
+        cursor: pointer;
+        border-radius: 6px;
+    }
+
+    .form-container .form-submit-btn:hover {
+        background-color: #fff;
+        color: #313131;
+        border-color: #fff;
+    }
+
+    .form-container .date-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .form-container .date-group .form-group {
+        flex: 1;
+    }
+
+    /* Change select dropdown text color to grey */
+    .form-container select {
+        color: rgb(22, 18, 18);
+    }
+</style>
+<div class="outer-div">
+    <div class="form-container">
+        <h2>CREATE PROJECT</h2>
+        <form class="form" action="/create_project" method="POST">
+            <div class="form-group">
+                <label for="name">Project Title</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="manager">Manager Username</label>
+                <select id="manager" name="manager" required>
+                    <% managers.forEach(manager=> { %>
+                        <option value="<%= manager.username %>">
+                            <%= manager.username %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="desc">Description</label>
+                <input type="text" id="desc" name="desc" required>
+            </div>
+            <div class="form-group">
+                <label for="loc">Location</label>
+                <input type="text" id="loc" name="loc" required>
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget Allocation</label>
+                <input type="text" id="budget" name="budget" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="flyover">Flyover</option>
+                    <option value="road">Road</option>
+                    <option value="block">Blocks</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="school">School</option>
+                    <option value="college">College</option>
+                    <option value="maintenance">Maintenance Project</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+            <div class="date-group">
+                <div class="form-group">
+                    <label for="from-date">From</label>
+                    <input type="date" id="from-date" name="from-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="to-date">To</label>
+                    <input type="date" id="to-date" name="to-date" required>
+                </div>
+            </div>
+    
+            <button class="form-submit-btn" type="submit">Submit</button>
+        </form>
+    </div>
+</div>

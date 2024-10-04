@@ -1,0 +1,82 @@
+<%- include('./common/navbar', { role , currentPage}); %> 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construction Site Home</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('/images/tools.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .welcome-message {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background-color:  rgb(245, 190, 9);
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #979774;
+    }
+    body {
+      background: url('tools.jpg');
+      background-size: cover;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <h1>Welcome <%= username %>!</h1>
+    <p class="welcome-message">Explore the latest projects and updates.</p>
+    <div class="button-container">
+      <a href="/projects" class="btn">View Projects</a>
+      <a href="/track" class="btn">Track</a>
+
+    </div>
+  </div>
+</body>
+</html>
