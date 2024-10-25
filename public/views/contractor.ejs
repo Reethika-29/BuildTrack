@@ -1,252 +1,262 @@
-    <%- include('./common/navbar', { role , currentPage }); %>
-        <!DOCTYPE html>
-        <html lang="en">
+<%- include('./common/navbar', { role, currentPage }); %>
+    <!DOCTYPE html>
+    <html lang="en">
 
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Contractor Details</title>
-            <style>
-                body {
-                    background: url('/images/pattern.png') no-repeat center center fixed;
-                    background-size: cover;
-                    font-family: Arial, sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f0f0f0;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    min-height: 100vh;
-                    overflow-y: auto;
-                }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contracto Details</title>
+        <style>
+            body {
+                background: url('/images/pattern.png') no-repeat center center fixed;
+                background-size: cover;
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f0f0f0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
 
-                nav {
-                    width: 100%;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    z-index: 1000;
-                    background-color: rgba(255, 255, 255, 0.95);
-                    padding: 10px 0;
-                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-                }
+            nav {
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                background-color: rgba(255, 255, 255, 0.95);
+                padding: 10px 0;
+                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            }
 
-                .card {
-                    background-color: rgba(0, 0, 0, 0.8);
-                    border-radius: 10px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                    padding: 20px;
-                    width: 90%;
-                    max-width: 500px;
-                    color: white;
-                    text-align: center;
-                    backdrop-filter: blur(5px);
-                    margin-top: 120px;
-                }
+            .card {
+                background-color: rgba(0, 0, 0, 0.8);
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                width: 90%;
+                max-width: 500px;
+                color: white;
+                text-align: center;
+                backdrop-filter: blur(5px);
+                margin-top: 120px;
+            }
 
-                input[type="text"],
-                input[type="number"],
-                input[type="date"] {
-                    width: calc(100% - 16px);
-                    padding: 8px;
-                    margin-top: 10px;
-                    margin-bottom: 15px;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                }
+            input[type="text"],
+            input[type="number"],
+            input[type="date"] {
+                width: calc(100% - 16px);
+                padding: 8px;
+                margin-top: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
 
-                button {
-                    background-color: rgb(245, 190, 9);
-                    color: rgb(75, 72, 72);
-                    padding: 10px 20px;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    margin-top: 10px;
-                }
+            button {
+                background-color: rgb(245, 190, 9);
+                color: rgb(75, 72, 72);
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
 
-                button:hover {
-                    background-color: rgb(200, 160, 7);
-                }
+            button:hover {
+                background-color: rgb(200, 160, 7);
+            }
 
-                #contractor-list {
-                    margin-top: 20px;
-                    text-align: left;
-                }
+            #contractor-list {
+                margin-top: 20px;
+                text-align: left;
+            }
 
-                .contractor-item {
-                    margin-bottom: 10px;
-                    padding: 10px;
-                    background-color: rgba(245, 190, 9, 0.1);
-                    border-radius: 5px;
-                }
+            .contractor-item {
+                margin-bottom: 10px;
+                padding: 10px;
+                background-color: rgba(245, 190, 9, 0.1);
+                border-radius: 5px;
+            }
 
-                h2 {
-                    color: rgb(245, 190, 9);
-                    margin-bottom: 20px;
-                }
+            h2 {
+                color: rgb(245, 190, 9);
+                margin-bottom: 20px;
+            }
 
-                /* Your existing styles */
-                .edit-btn {
-                    background-color:rgb(245, 190, 9);
-                    color: white;
-                    padding: 5px;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    margin-top: 10px;
-                }
+            .dashboard-btn {
+                position: fixed;
+                bottom: 20px;
+                /* Positioning from the bottom */
+                left: 20px;
+                /* Positioning from the left */
+                z-index: 1000;
+            }
+        </style>
+    </head>
 
-                .edit-btn:hover {
-                    background-color: rgb(214, 202, 40);
-                }
+    <body>
+        <div class="card">
 
-                .save-btn {
-                    background-color: green;
-                    color: white;
-                    padding: 5px;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    margin-top: 10px;
-                }
+            <h2>Contract Details</h2>
+            <form id="contractorForm" onsubmit="return addContractor()">
+                <label for="contractor-name">Contractor Name:</label>
+                <input type="text" id="contractor-name" placeholder="Enter contractor name" required>
 
-                .save-btn:hover {
-                    background-color: darkgreen;
-                }
+                <label for="contact-details">Contract Details:</label>
+                <input type="text" id="contact-details" placeholder="Enter contractor details" required>
 
-                .contractor-item input[type="text"],
-                .contractor-item input[type="number"],
-                .contractor-item input[type="date"] {
-                    width: 100%;
-                    padding: 5px;
-                    margin-top: 5px;
-                    margin-bottom: 5px;
-                }
-            </style>
-        </head>
+                <label for="cost-estimate">Cost Estimate:</label>
+                <input type="number" id="cost-estimate" placeholder="Enter cost estimate" min="0" required>
 
-        <body>
-            <div class="card">
-                <h2>Contractor Details</h2>
-                <form id="contractorForm" onsubmit="return addContractor()">
-                    <label for="contractor-name">Contractor Name:</label>
-                    <input type="text" id="contractor-name" placeholder="Enter contractor name" required>
-    
-                    <label for="contact-details">Contractor Details:</label>
-                    <input type="text" id="contact-details" placeholder="Enter contractor details" required>
-    
-                    <label for="cost-estimate">Cost Estimate:</label>
-                    <input type="number" id="cost-estimate" placeholder="Enter cost estimate" min="0" required>
-    
-                    <label for="from-date">From Date:</label>
-                    <input type="date" id="from-date" required>
-    
-                    <label for="to-date">To Date:</label>
-                    <input type="date" id="to-date" required>
-    
-                    <button type="submit">Add Contractor</button>
-                </form>
-                <div id="contractor-list">
-                    <% contractors.forEach((contractor, index)=> { %>
-                        <div class="contractor-item" id="contractor-item-<%= index %>">
-                            <strong>Name:</strong>
-                            <input type="text" id="name-<%= index %>" value="<%= contractor.name %>" readonly>
-                            <strong>Contact:</strong>
-                            <input type="text" id="contact-<%= index %>" value="<%= contractor.contact %>" readonly>
-                            <strong>Cost Estimate:</strong>
-                            <input type="number" id="cost-<%= index %>" value="<%= contractor.costEstimate %>" readonly>
-                            <strong>From Date:</strong>
-                            <input type="date" id="from-<%= index %>"
-                                value="<%= contractor.fromDate.toISOString().slice(0, 10) %>" readonly>
-                            <strong>To Date:</strong>
-                            <input type="date" id="to-<%= index %>"
-                                value="<%= contractor.toDate.toISOString().slice(0, 10) %>" readonly>
+                <label for="from-date">From Date:</label>
+                <input type="date" id="from-date" required>
 
-                            <button class="edit-btn" onclick="editContractor(<%= index %>)">Edit</button>
-                            <button class="save-btn" style="display: none;"
-                                onclick="saveContractor('<%= contractor._id %>', <%= index %>)">Save</button>
-                        </div>
-                        <% }); %>
-                </div>
+                <label for="to-date">To Date:</label>
+                <input type="date" id="to-date" required>
+
+                <input type="hidden" name="projectId" value="<%= project.id %>">
+                <button type="submit">Add Contract</button>
+            </form>
+
+            <div id="contractor-list">
+                <% contractors.forEach((contractor)=> { %>
+                    <div class="contractor-item" id="contractor-item-<%= contractor._id %>">
+                        <strong>Name:</strong>
+                        <input type="text" id="name-<%= contractor._id %>" value="<%= contractor.name %>" readonly>
+                        <strong>Details:</strong>
+                        <input type="text" id="contact-<%= contractor._id %>" value="<%= contractor.contact %>"
+                            readonly>
+                        <strong>Cost Estimate:</strong>
+                        <input type="number" id="cost-<%= contractor._id %>" value="<%= contractor.costEstimate %>"
+                            readonly>
+                        <strong>From Date:</strong>
+                        <input type="date" id="from-<%= contractor._id %>"
+                            value="<%= new Date(contractor.fromDate).toISOString().slice(0,10) %>" readonly>
+                        <strong>To Date:</strong>
+                        <input type="date" id="to-<%= contractor._id %>"
+                            value="<%= new Date(contractor.toDate).toISOString().slice(0,10) %>" readonly>
+
+                        <!-- Edit and Delete Buttons -->
+                        <button class="edit-btn" onclick="editContractor('<%= contractor._id %>')">Edit</button>
+                        <button class="save-btn" style="display:none;"
+                            onclick="saveContractor('<%= contractor._id %>')">Save</button>
+                        <button class="delete-btn"
+                            onclick="deleteContractor('<%= contractor._id %>', this)">Delete</button>
+                    </div>
+                    <% }); %>
             </div>
+        </div>
 
-            <script>
-                function addContractor() {
-                    const projectId = "<%= project._id %>";
-
-                    const contractorData = {
-                        projectId,
-                        name: document.getElementById('contractor-name').value,
-                        contact: document.getElementById('contact-details').value,
-                        costEstimate: parseFloat(document.getElementById('cost-estimate').value),
-                        fromDate: document.getElementById('from-date').value,
-                        toDate: document.getElementById('to-date').value
-                    };
-
-                    fetch('/contractor/add', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(contractorData)
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message === 'Contractor added successfully') {
-                                window.location.reload(); // Reload page to show the new contractor
-                            } else {
-                                alert('Error adding contractor');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error adding contractor');
-                        });
-
+        <script>
+            function addContractor() {
+                const projectId = "<%= project.id %>";
+                const fromDate = document.getElementById('from-date').value;
+                const toDate = document.getElementById('to-date').value;
+                if (new Date(toDate) <= new Date(fromDate)) {
+                    alert('Error: "To Date" must be greater than "From Date".');
                     return false; // Prevent form submission
                 }
 
-                function editContractor(index) {
-                    document.getElementById(`name-${index}`).removeAttribute('readonly');
-                    document.getElementById(`contact-${index}`).removeAttribute('readonly');
-                    document.getElementById(`cost-${index}`).removeAttribute('readonly');
-                    document.getElementById(`from-${index}`).removeAttribute('readonly');
-                    document.getElementById(`to-${index}`).removeAttribute('readonly');
+                const contractorData = {
+                    projectId,
+                    name: document.getElementById('contractor-name').value,
+                    contact: document.getElementById('contact-details').value,
+                    costEstimate: parseFloat(document.getElementById('cost-estimate').value),
+                    fromDate: document.getElementById('from-date').value,
+                    toDate: document.getElementById('to-date').value
+                };
 
-                    document.querySelector(`#contractor-item-${index} .edit-btn`).style.display = 'none';
-                    document.querySelector(`#contractor-item-${index} .save-btn`).style.display = 'inline-block';
-                }
-
-                function saveContractor(contractorId, index) {
-                    const updatedContractor = {
-                        name: document.getElementById(`name-${index}`).value,
-                        contact: document.getElementById(`contact-${index}`).value,
-                        costEstimate: parseFloat(document.getElementById(`cost-${index}`).value),
-                        fromDate: document.getElementById(`from-${index}`).value,
-                        toDate: document.getElementById(`to-${index}`).value
-                    };
-
-                    fetch(`/contractor/update/${contractorId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(updatedContractor)
+                fetch('/contractor/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(contractorData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Contractor added successfully') {
+                            window.location.reload(); // Reload page to show the new contractor
+                        } else {
+                            alert('Error adding contractor');
+                        }
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message === 'Contractor updated successfully') {
-                                alert('Contractor updated successfully!');
-                                window.location.reload();
-                            } else {
-                                alert('Error updating contractor');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error updating contractor');
-                        });
-                }
-            </script>
-        </body>
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error adding contractor');
+                    });
 
-        </html>
+                return false; // Prevent form submission
+            }
+
+            function editContractor(id) {
+                // Enable input fields
+                document.querySelector(`#name-${id}`).removeAttribute('readonly');
+                document.querySelector(`#contact-${id}`).removeAttribute('readonly');
+                document.querySelector(`#cost-${id}`).removeAttribute('readonly');
+                document.querySelector(`#from-${id}`).removeAttribute('readonly');
+                document.querySelector(`#to-${id}`).removeAttribute('readonly');
+
+                // Show Save button and hide Edit button
+                document.querySelector(`#contractor-item-${id} .edit-btn`).style.display = 'none';
+                document.querySelector(`#contractor-item-${id} .save-btn`).style.display = 'inline-block';
+            }
+
+            function saveContractor(contractorId) {
+                const updatedContractor = {
+                    name: document.querySelector(`#name-${contractorId}`).value,
+                    contact: document.querySelector(`#contact-${contractorId}`).value,
+                    costEstimate: parseFloat(document.querySelector(`#cost-${contractorId}`).value),
+                    fromDate: document.querySelector(`#from-${contractorId}`).value,
+                    toDate: document.querySelector(`#to-${contractorId}`).value
+                };
+
+                fetch(`/contractors/update/${contractorId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedContractor)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Contract updated successfully') {
+                            alert('Contract updated successfully!');
+                            window.location.reload(); // Reload to reflect changes
+                        } else {
+                            alert('Error updating contract');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error updating contract');
+                    });
+            }
+
+            function deleteContractor(contractorId, button) {
+                const confirmation = confirm('Are you sure you want to delete this contractor?');
+                if (!confirmation) return;
+
+                fetch(`/contractors/${contractorId}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Contractor deleted successfully!');
+                            button.parentElement.remove(); // Remove the entry from the UI
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error deleting contractor:', error));
+            }
+        </script>
+        <div class="dashboard-btn">
+            <a href="/projects/<%= project.id %>/edit" class="btn"
+                style="background-color: rgb(245, 190, 9); color: rgb(75, 72, 72); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Dashboard</a>
+        </div>
+
+
+    </body>
+
+    </html>

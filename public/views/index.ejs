@@ -1,0 +1,294 @@
+app.get('/resource/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
+  const projectTitle = req.params.title;
+  const project = { id: projectId, name: projectTitle }; // Replace with actual project data if needed
+  const currentPage = "resource";
+  const role = req.session.user.role;
+
+  try {
+    // Fetch existing resources for the project
+    const resourceData = await Resource.findOne({ projectId });
+    const milestoneData = await MilestoneStage.findOne({ projectId });
+
+    // If there are no resources, set stages to an empty array
+    const stages = resourceData ? resourceData.stages : [];
+    const milestoneStages = milestoneData ? milestoneData.stages : []; // Fetch milestone stages
+
+    // Map the milestone stages to only get the name and stage number
+    const stageDetails = milestoneStages.map(stage => ({
+      stage: stage.stage,
+      name: stage.name
+    }));
+
+    res.render('resource', { project, stages, stageDetails, role, currentPage });
+  } catch (err) {
+    console.error('Error fetching resources:', err);
+    res.status(500).send('Error: ' + err.message);
+  }
+});
+// Assuming you have a route for getting milestone stages
+app.get('/api/milestoneStages/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
+
+  try {
+      const milestoneStage = await MilestoneStage.findOne({ projectId });
+
+      if (!milestoneStage) {
+          return res.status(404).send({ message: 'Milestone stages not found' });
+      }
+
+      res.send(milestoneStage.stages);
+  } catch (error) {
+      console.error('Error fetching milestone stages:', error);
+      res.status(500).send({ message: 'Error fetching milestone stages', error });
+  }
+});
+app.post('/api/resources', async (req, res) => {
+  const newResource = new Resource(req.body);
+  
+  try {
+      await newResource.save();
+      res.status(201).send(newResource);
+  } catch (error) {
+      console.error('Error saving resource:', error);
+      res.status(500).send({ message: 'Error saving resource', error });
+  }
+});
+
+// API to get all resources
+app.get('/api/milestoneStages/:projectId', async (req, res) => {
+  const projectId = req.params.projectId;
+
+  // Validate if projectId is a valid ObjectId
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).send({ message: 'Invalid project ID' });
+  }
+
+  try {
+      const milestoneStage = await MilestoneStage.findOne({ projectId });
+
+      if (!milestoneStage) {
+          return res.status(404).send({ message: 'Milestone stages not found' });
+      }
+
+      res.send(milestoneStage.stages);
+  } catch (error) {
+      console.error('Error fetching milestone stages:', error);
+      res.status(500).send({ message: 'Error fetching milestone stages', error });
+  }
+});
+
+// API to update an existing resource
+app.put('/api/resources/:id', async (req, res) => {
+  try {
+      const updatedResource = await Resource.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      
+      if (!updatedResource) {
+          return res.status(404).send({ message: 'Resource not found' });
+      }
+      
+      res.send(updatedResource);
+  } catch (error) {
+      console.error('Error updating resource:', error);
+      res.status(500).send({ message: 'Error updating resource', error });
+  }
+});
+
+// API to delete a resource by ID
+app.delete('/api/resources/:id', async (req, res) => {
+  try {
+      await Resource.findByIdAndDelete(req.params.id);
+      res.status(204).send();
+  } catch (error) {
+      console.error('Error deleting resource:', error);
+      res.status(500).send({ message: 'Error deleting resource', error });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 5px; /* Added margin for better spacing */
+        }
+
+        ul {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resource Manager</h1>
+        <form id="resourceForm">
+            <input type="text" id="resource" placeholder="Resource Name" required>
+            <input type="number" id="quantity" placeholder="Quantity" required min="0"> <!-- Set min to 0 -->
+            <input type="text" id="unit" placeholder="Unit" required>
+            <input type="number" id="amount" placeholder="Amount" required min="0"> <!-- Set min to 0 -->
+            <input type="number" id="stageNumber" placeholder="Stage Number" required min="0"> <!-- New stage number input -->
+            <button type="submit">Add Resource</button>
+        </form>
+        <ul id="resourceList"></ul>
+    </div>
+
+    <script>
+        const form = document.getElementById('resourceForm');
+        const resourceList = document.getElementById('resourceList');
+        let editingResourceId = null;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const resource = document.getElementById('resource').value;
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const unit = document.getElementById('unit').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const stageNumber = parseInt(document.getElementById('stageNumber').value); // Get stage number
+
+            // Validate non-negative values
+            if (quantity < 0 || amount < 0 || stageNumber < 0) {
+                alert("Quantity, Amount, and Stage Number must be non-negative.");
+                return; // Prevent submission
+            }
+
+            if (editingResourceId) {
+                // Update existing resource
+                const response = await fetch(`/api/resources/${editingResourceId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ resource, quantity, unit, amount, stageNumber }) // Include stage number
+                });
+
+                if (response.ok) {
+                    editingResourceId = null; // Reset editing ID
+                }
+            } else {
+                // Create new resource
+                const response = await fetch('/api/resources', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ resource, quantity, unit, amount, stageNumber }) // Include stage number
+                });
+                
+                if (response.ok) {
+                    loadResources();
+                }
+            }
+            
+            form.reset();
+            loadResources();
+        });
+
+        async function loadResources() {
+    const response = await fetch('/api/resources');
+    const resources = await response.json();
+    
+    resourceList.innerHTML = '';
+
+    // Replace this with the actual project ID you want to use
+    const projectId = 'YOUR_ACTUAL_PROJECT_ID'; // Replace with actual project ID
+
+    for (const item of resources) {
+        // Fetch the milestone stages for the specific project ID
+        const milestoneResponse = await fetch(`/api/milestoneStages/${projectId}`);
+        const stages = await milestoneResponse.json();
+
+        // Find the stage name based on the stage number
+        const stageNameObj = stages.find(stage => stage.stage === item.stageNumber);
+        const stageName = stageNameObj ? stageNameObj.name : 'Unknown Stage';
+
+        const li = document.createElement('li');
+        li.textContent = `${item.resource} - ${item.quantity} ${item.unit} - $${item.amount} - Stage ${item.stageNumber} (${stageName})`; // Display stage name
+        
+        // Edit button
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.onclick = () => editResource(item);
+        
+        // Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = () => deleteResource(item._id);
+        
+        li.appendChild(editButton);
+        li.appendChild(deleteButton);
+        resourceList.appendChild(li);
+    }
+}
+
+        function editResource(item) {
+            // Pre-fill the form with the existing data
+            document.getElementById('resource').value = item.resource;
+            document.getElementById('quantity').value = item.quantity;
+            document.getElementById('unit').value = item.unit;
+            document.getElementById('amount').value = item.amount;
+            document.getElementById('stageNumber').value = item.stageNumber; // Pre-fill stage number
+
+            editingResourceId = item._id; // Set the ID of the resource being edited
+        }
+
+        async function deleteResource(id) {
+            await fetch(`/api/resources/${id}`, { method: 'DELETE' });
+            loadResources();
+        }
+
+        // Load resources on page load
+        loadResources();
+    </script>
+</body>
+</html>
+
+
+const resourceSchema = new mongoose.Schema({
+  resource: String,
+  quantity: { type: Number, min: 0 },
+  amount: { type: Number, required: true, min: 0  },
+  stageNumber: { type: Number, min: 0 }
+});
+
+const Resource = mongoose.model('Resource', resourceSchema);

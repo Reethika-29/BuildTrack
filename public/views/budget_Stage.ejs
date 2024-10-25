@@ -1,206 +1,207 @@
-<%- include('./common/navbar', { role , currentPage }); %>
-
+<%- include('./common/navbar', { role, currentPage }); %>
     <!DOCTYPE html>
     <html lang="en">
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Milestone Card</title>
-        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+        <title>Milestone Stages and Contractors</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <style>
             body {
-                background: url('/images/pattern.png') no-repeat center center fixed;
-                background-size: cover;
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                min-height: 100vh;
-                background-color: #f0f0f0;
-                overflow-y: auto;
+                background-color: #343a40;
+                /* Dark background */
+                color: #201e1e;
+                /* White text for better contrast */
+                font-family: 'Roboto', sans-serif;
+            }
+
+            h1 {
+                color: rgb(245, 190, 9);
+                /* Header color */
+                text-align: center;
+                margin-top: 20px;
+                font-weight: 700;
+            }
+
+            .table {
+                background-color: rgba(255, 255, 255, 0.4);
+                /* Slightly transparent white for table background */
+                border-radius: 5px;
+                border: 1px solid rgb(245, 190, 9);
+                /* Border for table */
+            }
+
+            th {
+                background-color: rgb(245, 190, 9);
+                color: rgb(75, 72, 72);
+                text-align: center;
+            }
+
+            td {
+                text-align: center;
+                padding: 10px;
+                /* Add padding for better spacing */
             }
 
             .container {
-                margin-top: 60px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                flex-grow: 1;
-                width: 100%;
-            }
-
-            .card {
-                background-color: rgba(0, 0, 0, 0.8);
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                margin-top: 30px;
                 padding: 20px;
-                width: 90%;
-                max-width: 600px;
-                color: white;
+                border-radius: 10px;
+                background-color: rgba(255, 255, 255, 0.2);
+                /* Slightly transparent white for container background */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                /* Shadow for depth */
+                max-width: 1200px;
+                /* Limit the width of the container */
+                margin-left: auto;
+                /* Center the container */
+                margin-right: auto;
+                /* Center the container */
+            }
+
+            .no-items {
                 text-align: center;
-                z-index: 1;
-                margin-bottom: 20px;
-                backdrop-filter: blur(5px);
-            }
-
-            input[type="number"] {
-                width: calc(100% - 16px);
-                padding: 8px;
-                margin-top: 10px;
-                margin-bottom: 15px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                color: #000;
-            }
-
-            button {
-                background-color: rgb(245, 190, 9);
-                color: rgb(75, 72, 72);
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                margin-top: 10px;
-            }
-
-            button:hover {
-                background-color: rgb(200, 160, 7);
-            }
-
-            h2 {
+                margin-top: 20px;
+                font-size: 18px;
                 color: rgb(245, 190, 9);
-                margin-bottom: 20px;
+                /* Color for no items message */
             }
 
-            label {
-                display: block;
-                margin-top: 10px;
-                text-align: left;
+            .dashboard-btn {
+                position: fixed;
+                bottom: 20px;
+                /* Positioning from the bottom */
+                left: 20px;
+                /* Positioning from the left */
+                z-index: 1000;
+            }
+
+            /* Hover effect for table rows */
+            tbody tr:hover {
+                background-color: rgba(245, 190, 9, 0.2);
+            }
+
+            #content-to-print {
+                overflow: auto;
+                /* Enables scrolling */
             }
         </style>
     </head>
 
-    <body data-stage-count="<%= stages ? stages.length : 0 %>">
-        <div class="container">
-            <div class="card">
-                <h2>Estimated Budget for Stages</h2>
-                <form id="milestoneForm" action="/budget_stage_estimate" method="POST">
-                    <div id="stageInputs">
-                        <% if (stages && stages.length> 0) { %>
-                            <% stages.forEach((stage, index)=> { %>
-                                <div>
-                                    <h3 style="color: rgb(245, 190, 9);">Stage <%= stage.stage %>
-                                    </h3>
-                                    <label for="estimated-amount-<%= index + 1 %>">Estimated Amount:</label>
-                                    <input type="number" id="estimated-amount-<%= index + 1 %>" min="0"
-                                        value="<%= stage.estimatedAmount %>" placeholder="Enter estimated amount"><br>
+    <body>
+        <h1 class="mt-5">Milestones</h1>
+        <center>
+            <% if (items.length> 0) { %>
+                <form action="/submit-budget/" method="POST">
+                    <input type="hidden" name="projectId" value="<%= project.id %>">
+                    <input type="hidden" name="editedBudgets" id="edited-budgets" value="">
 
-                                    <p style="color: rgb(245, 190, 9);">Total Amount Spent: <%= stage.totalStageAmount ?
-                                            stage.totalStageAmount.toFixed(2) : '0.00' %>
-                                    </p>
-                                </div>
-                                <% }) %>
-                                    <% } %>
-                    </div>
-                    <input type="hidden" id="projectId" name="projectId" value="<%= project.id %>">
-                    <input type="hidden" id="totalEstimatedInput" name="totalEstimatedAmount" value="0">
+                    <table class="table mt-3">
+                        <thead>
+                            <tr>
+                                <th>Stage</th>
+                                <th>Name</th>
+                                <th>Estimated Budget</th>
+                                <th>Total Stage Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% items.forEach(item=> { %>
+                                <% item.stages.forEach(stage=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= stage.stage %>
+                                        </td>
+                                        <td>
+                                            <%= stage.name %>
+                                        </td>
+                                        <td>
+                                            <span class="estimated-budget" id="budget-<%= stage.stage %>">
+                                                <%= estimatedBudgetMap.get(stage.stage.toString()) || '0' %>
+                                            </span>
+                                            <input type="number" class="form-control d-none"
+                                                id="edit-budget-<%= stage.stage %>"
+                                                value="<%= estimatedBudgetMap.get(stage.stage.toString()) || '0' %>">
+                                        </td>
 
-                    <button type="button" onclick="addStage()">Add Stage</button>
-                    <button type="button" onclick="saveMilestoneDetails()">Submit Details</button>
+                                        <td>
+                                            <%= stageAmountMap.get(stage.stage) || 'N/A' %>
+                                                <!-- Display totalStageAmount or 'N/A' if not found -->
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-secondary edit-budget"
+                                                data-stage="<%= stage.stage %>">Edit</button>
+                                            <button type="button" class="btn btn-success save-budget d-none"
+                                                data-stage="<%= stage.stage %>">Save</button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                        <% }) %>
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-primary mt-3">Submit Budget</button>
                 </form>
-            </div>
-
-            <!-- Total Estimated Amount Card -->
-            <div class="card">
-                <h2>Total Estimated Amount</h2>
-                <input type="number" id="totalEstimatedAmountInput" min="0" placeholder="Enter total estimated amount"
-                    style="width: calc(100% - 16px); padding: 8px; border-radius: 4px; color: #000;">
-                <button type="button" onclick="saveMilestoneDetails()">Submit Total Estimated Amount</button>
-            </div>
-        </div>
-        <div class="card">
-            <h2>Total Amount Spent Across All Stages</h2>
-            <p style="color: rgb(245, 190, 9); font-size: 1.5em;">$<%= totalAmount.toFixed(2) %></p>
-        </div>
-    </div>
-
+                <% } else { %>
+                    <p class="no-items">No milestone stages found.</p>
+                    <% } %>
+        </center>
         <script>
-            let stageCount = parseInt(document.body.getAttribute('data-stage-count'));
+            // JavaScript to handle edit and save functionality
+            document.querySelectorAll('.edit-budget').forEach(button => {
+                button.addEventListener('click', function () {
+                    const stage = this.getAttribute('data-stage');
+                    const budgetSpan = document.getElementById(`budget-${stage}`);
+                    const budgetInput = document.getElementById(`edit-budget-${stage}`);
+                    const saveButton = this.nextElementSibling; // Save button
+                    const editButton = this; // Edit button
 
-            function addStage() {
-                stageCount++;
-                const stageInputs = document.getElementById('stageInputs');
+                    // Show input and hide span
+                    budgetSpan.classList.add('d-none');
+                    budgetInput.classList.remove('d-none');
+                    budgetInput.focus();
 
-                const stageDiv = document.createElement('div');
-                stageDiv.innerHTML = `
-            <div>
-                <h3 style="color: rgb(245, 190, 9);">Stage ${stageCount}</h3>
-                <label for="estimated-amount-${stageCount}">Estimated Amount:</label>
-                <input type="number" id="estimated-amount-${stageCount}" min="0" placeholder="Enter estimated amount"><br>
-            </div>`;
-                stageInputs.appendChild(stageDiv);
-            }
+                    // Show the save button and hide the edit button
+                    saveButton.classList.remove('d-none');
+                    editButton.classList.add('d-none');
+                });
+            });
 
-            function saveMilestoneDetails() {
-                let stages = [];
-                const projectId = document.getElementById('projectId').value;
+            document.querySelectorAll('.save-budget').forEach(button => {
+                button.addEventListener('click', function () {
+                    const stage = this.getAttribute('data-stage');
+                    const budgetSpan = document.getElementById(`budget-${stage}`);
+                    const budgetInput = document.getElementById(`edit-budget-${stage}`);
+                    const editButton = this.previousElementSibling; // Edit button
 
-                // Calculate total estimated amount from the inputs
-                let totalEstimatedAmount = 0;
+                    // Update the displayed budget value
+                    budgetSpan.innerText = budgetInput.value;
 
-                for (let i = 1; i <= stageCount; i++) {
-                    const estimatedAmountInput = document.getElementById(`estimated-amount-${i}`);
-                    const estimatedAmount = parseFloat(estimatedAmountInput.value) || 0;
+                    // Hide input and show span
+                    budgetSpan.classList.remove('d-none');
+                    budgetInput.classList.add('d-none');
 
-                    // Validate estimated amount
-                    if (estimatedAmount < 0) {
-                        alert(`Please enter a valid estimated amount for Stage ${i}.`);
-                        return;
-                    }
+                    // Show the edit button and hide the save button
+                    editButton.classList.remove('d-none');
+                    this.classList.add('d-none');
 
-                    totalEstimatedAmount += estimatedAmount;
+                    // Update the hidden input with the new budget value
+                    // Update the hidden input with the new budget value
+                    const editedBudgets = JSON.parse(document.getElementById('edited-budgets').value || '{}');
+                    editedBudgets[stage] = budgetInput.value; // Store the updated budget
+                    document.getElementById('edited-budgets').value = JSON.stringify(editedBudgets); // Convert back to string
 
-                    if (estimatedAmount > 0) {
-                        stages.push({
-                            stage: i,
-                            estimatedAmount: estimatedAmount
-                        });
-                    } else {
-                        alert(`Please enter the estimated amount for Stage ${i}.`);
-                        return;
-                    }
-                }
-
-                // Set the total estimated amount
-                document.getElementById('totalEstimatedInput').value = totalEstimatedAmount;
-
-                fetch('/save_stage_details', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ stages, projectId, totalEstimatedAmount })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Estimate details saved successfully!');
-                            // Optionally redirect to a different page or update the UI
-                        } else {
-                            alert('Failed to save estimate details.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while saving stage details.');
-                    });
-            }
-
+                });
+            });
 
         </script>
+
+        <div class="dashboard-btn">
+            <a href="/projects/<%= project.id %>/edit" class="btn"
+                style="background-color: rgb(245, 190, 9); color: rgb(75, 72, 72); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Dashboard</a>
+        </div>
     </body>
 
     </html>

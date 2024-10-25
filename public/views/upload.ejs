@@ -1,78 +1,129 @@
+<%- include('./common/navbar', { role, currentPage }); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Document</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: #f4f4f4;
-      background: url('/images/pattern.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-    .container {
-      margin-top: 100px;
-      max-width: 600px; /* Limit the width for better appearance */
-    }
-    .card {
-      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-      padding: 20px; /* Add some padding inside the card */
-      color: white; /* Set text color to white for contrast */
-      text-align: center; /* Center text */
-      z-index: 1; /* Ensure the card is above background */
-      backdrop-filter: blur(5px); /* Apply blur effect to background */
-    }
-    .card-header {
-      background-color: rgb(245, 190, 9);
-      color: #fff;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-    .btn-upload {
-      background-color: rgb(245, 190, 9);
-      color: #fff;
-    }
-    .btn-upload:hover {
-      background-color: rgb(220, 170, 9);
-    }
-    h5 {
-      font-weight: bold;
-    }
-    .form-label {
-      font-weight: bold; /* Make labels bold */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document for Project: <%= project.name %></title>
+    <style>
+        .body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(75, 72, 72);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(245, 190, 9);
+        }
+
+        #uploadForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the form */
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="file"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgb(245, 190, 9);
+            color: black;
+            cursor: pointer;
+            margin-bottom: 10px; /* Space between inputs */
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgb(245, 190, 9);
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(220, 170, 0); /* Darker shade on hover */
+        }
+
+        #documentGallery {
+            display: flex;
+            flex-direction: column; /* Stack documents vertically */
+            align-items: center; /* Center align items */
+        }
+
+        .document-item {
+            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+            border-radius: 8px;
+            padding: 10px; /* Add some padding around the document info */
+            margin-bottom: 10px; /* Space between document items */
+            width: 80%; /* Set a width for document items */
+        }
+
+        .document-item p {
+            margin: 5px 0; /* Space between paragraphs */
+        }
+        .dashboard-btn {
+            position: fixed;
+            bottom: 20px; /* Positioning from the bottom */
+            left: 20px;   /* Positioning from the left */
+            z-index: 1000;
+        }
+    </style>
 </head>
-<body>
+<div class="body">
+    <h1>Upload Site Documents </h1>
 
-  <div class="container">
-    <div class="card">
-      <div class="card-header text-center">
-        <h5 class="card-title">Upload Site Approval and Site Related Documents</h5>
-      </div>
-      
-      <div class="card-body">
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="projectId" value="<%= project.id %>">
-          <div class="mb-4">
-            <label for="document" class="form-label">Choose Document</label>
-            <input type="file" class="form-control" id="document" name="document" required>
-          </div>
-          <div class="mb-4">
-            <label for="filename" class="form-label">Filename</label>
-            <input type="text" class="form-control" id="filename" name="filename" required>
-          </div>
-          <button type="submit" class="btn btn-upload btn-lg w-100">Upload</button> <!-- Full-width button -->
-        </form>
-      </div>
-    </div>
-  </div>
+    <!-- Form to upload new documents -->
+    <form id="uploadForm" enctype="multipart/form-data" method="POST" action="/upload">
+        <input type="hidden" name="projectId" value="<%= project.id %>"> <!-- Hidden input for project ID -->
+        <input type="text" name="filename" placeholder="Enter Filename" required> <!-- Filename input -->
+        <input type="file" name="document" accept=".pdf,.doc,.docx,.txt" required> <!-- File input -->
+        <button type="submit">Upload Document</button>
+    </form>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js">
-   
-  </script>
-</body>
+    <div id="documentGallery">
+      <% if (documents.length > 0) { %>
+          <% documents.forEach(document => { %>
+              <div class="document-item">
+                  <p><strong>Filename:</strong> <%= document.filename %></p>
+                  <!-- <p><strong>Original Name:</strong> <%= document.originalName %></p> -->
+                  <p><strong>Uploaded At:</strong> <%= document.createdAt.toDateString() %></p>
+                  <p><a href="/documents/<%= document.filename %>" target="_blank">View Document</a></p>
+                  <!-- Delete button -->
+                  <button onclick="deleteDocument('<%= document._id %>')">Delete Document</button>
+              </div>
+          <% }) %>
+      <% } else { %>
+          <p>No documents found for this project.</p>
+      <% } %>
+   </div>
+
+   <script>
+       async function deleteDocument(documentId) {
+        const confirmDelete = confirm("Are you sure you want to delete this document?");
+        if (!confirmDelete) {
+            return; // Exit the function if the user cancels
+        }
+
+           const response = await fetch(`/api/documents/${documentId}`, {
+               method: 'DELETE',
+           });
+
+           if (response.ok) {
+               alert('Document deleted successfully!');
+               location.reload(); // Reload the page to reflect changes
+           } else {
+               alert('Error deleting document.');
+           }
+       }
+   </script>
+</div>
+<div class="dashboard-btn">
+    <a href="/projects/<%= project.id %>/edit" class="btn" style="background-color: rgb(245, 190, 9); color: rgb(75, 72, 72); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Dashboard</a>
+</div>
 </html>

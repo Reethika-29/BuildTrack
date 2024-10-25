@@ -1,191 +1,217 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('./common/navbar', { role , currentPage }); %>
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            background: url('/images/pattern.png') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding-top: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resources</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <style>
+            .body {
+                background: url('/images/pattern.png') no-repeat center center fixed;
+                background-size: cover;
+                font-family: Arial, sans-serif;
+                background-color: #f0f0f0;
+                margin: 0;
+                padding-top: 70px;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+            }
 
-        .form-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            width: 100%;
-            max-width: 800px;
-            margin-top: 20px;
-        }
+            .form-container {
+                background-color: rgba(37, 34, 34, 0.8);
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                width: 100%;
+                max-width: 800px;
+                margin-top: 20px;
+            }
 
-        h1 {
-            text-align: center;
-            color: rgb(75, 72, 72);
-        }
+            h1 {
+                text-align: center;
+                color: rgb(75, 72, 72);
+            }
 
-        .stage {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid rgb(75, 72, 72);
-            border-radius: 4px;
-            background-color: #fafafa;
-        }
+            .stage {
+                margin-bottom: 20px;
+                padding: 10px;
+                border: 1px solid rgb(75, 72, 72);
+                border-radius: 4px;
+                background-color: #fafafa;
+            }
 
-        input[type="text"],
-        input[type="number"] {
-            width: calc(100% - 20px);
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+            input[type="text"],
+            input[type="number"] {
+                width: calc(100% - 20px);
+                padding: 8px;
+                margin: 5px 0;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
 
-        button {
-            background-color: rgb(245, 190, 9);
-            color: rgb(75, 72, 72);
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 10px 0;
-        }
+            button {
+                background-color: rgb(245, 190, 9);
+                color: rgb(75, 72, 72);
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin: 10px 0;
+            }
 
-        button:hover {
-            background-color: rgb(200, 160, 7);
-        }
+            button:hover {
+                background-color: rgb(200, 160, 7);
+            }
 
-        #totalAmount,
-        .stageTotal {
-            font-weight: bold;
-            margin-top: 10px;
-        }
+            #totalAmount,
+            .stageTotal {
+                font-weight: bold;
+                margin-top: 10px;
+            }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
 
-        th,
-        td {
-            border: 1px solid rgb(75, 72, 72);
-            padding: 8px;
-            text-align: left;
-        }
+            th,
+            td {
+                border: 1px solid rgb(75, 72, 72);
+                padding: 8px;
+                text-align: left;
+            }
 
-        th {
-            background-color: rgb(245, 190, 9);
-            color: white;
-        }
+            th {
+                background-color: rgb(245, 190, 9);
+                color: white;
+            }
 
-        .actions button {
-            background-color: rgb(245, 190, 9);
-            color: rgb(75, 72, 72);
-            padding: 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 2px;
-        }
+            .actions button {
+                background-color: rgb(245, 190, 9);
+                color: rgb(75, 72, 72);
+                padding: 5px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin: 2px;
+            }
 
-        .actions button:hover {
-            background-color: rgb(200, 160, 7);
-        }
-    </style>
-</head>
+            .actions button:hover {
+                background-color: rgb(200, 160, 7);
+            }
 
-<body>
-    <div class="form-container">
-        <h1>Resources for <%= project.name %></h1>
+            .dashboard-btn {
+                position: fixed;
+                bottom: 20px;
+                /* Positioning from the bottom */
+                left: 20px;
+                /* Positioning from the left */
+                z-index: 1000;
+            }
+        </style>
+    </head>
 
-        <form id="resourceForm" action="/add_resource" method="POST">
-            <input type="hidden" name="projectId" value="<%= project.id %>">
-            <input type="hidden" id="stageCount" name="stageCount" value="<%= stages.length %>">
+    <div class="body">
+        <div class="form-container">
+            <h1 style="color: white;">Resources <%= project.name %>
+            </h1>
+            <center>
+                <h2 style="color: white;"> (Materials and Other Expenditures) <%= project.name %>
+                </h2>
+            </center>
 
-            <div id="stagesContainer">
-                <% stages.forEach((stage, index) => { %>
-                    <div class="stage" id="stage-<%= stage.stage %>">
-                        <h3>
-                            <% stageDetails.forEach((stageDetail) => { %>
-                                <% if (stage.stage == stageDetail.stage) { %>
-                                    Stage <%= stageDetail.stage %>: <%= stageDetail.name %>
-                                <% } %>
-                            <% }); %>
-                        </h3>
 
-                        <table id="resourceTable-<%= stage.stage %>">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>Resource</th>
-                                    <th>Quantity</th>
-                                    <th>Amount</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% stage.resources.forEach((resource, rIndex) => { %>
+            <form id="resourceForm" action="/add_resource" method="POST">
+                <input type="hidden" name="projectId" value="<%= project.id %>">
+                <input type="hidden" id="stageCount" name="stageCount" value="<%= stages.length %>">
+
+                <div id="stagesContainer">
+                    <% stages.forEach((stage, index)=> { %>
+                        <div class="stage" id="stage-<%= stage.stage %>">
+                            <h3>
+                                <% stageDetails.forEach((stageDetail)=> { %>
+                                    <% if (stage.stage==stageDetail.stage) { %>
+                                        Stage <%= stageDetail.stage %>: <%= stageDetail.name %>
+                                                <% } %>
+                                                    <% }); %>
+                            </h3>
+
+                            <table id="resourceTable-<%= stage.stage %>">
+                                <thead>
                                     <tr>
-                                        <td><%= rIndex + 1 %></td>
-                                        <td><input type="text" name="resourceType-<%= stage.stage %>[]"
-                                                value="<%= resource.resourceType %>"></td>
-                                        <td><input type="text" name="quantity-<%= stage.stage %>[]"
-                                                value="<%= resource.quantity %>"></td>
-                                        <td><input type="number" name="amount-<%= stage.stage %>[]"
-                                                value="<%= resource.amount %>" min="0" step="any"></td>
-                                        <td class="actions">
-                                            <button type="button" onclick="addRow(<%= stage.stage %>)"><i class="fas fa-plus"></i> Add</button>
-                                            <button type="button" onclick="editRow(this)"><i class="fas fa-edit"></i> Edit</button>
-                                            <button type="button" onclick="deleteRow(this)"><i class="fas fa-trash"></i> Delete</button>
-                                        </td>
+                                        <th>S.No</th>
+                                        <th>Resource</th>
+                                        <th>Quantity</th>
+                                        <th>Unit/Description</th>
+                                        <th>Amount</th>
+                                        <th>Actions</th>
                                     </tr>
-                                <% }); %>
-                            </tbody>
-                        </table>
-                        <div class="stageTotal" id="stageTotal-<%= stage.stage %>">
-                            <strong>Stage <%= stage.stage %> Total:</strong> 0
+                                </thead>
+                                <tbody>
+                                    <% stage.resources.forEach((resource, rIndex)=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= rIndex + 1 %>
+                                            </td>
+                                            <td><input type="text" name="resourceType-<%= stage.stage %>[]"
+                                                    value="<%= resource.resourceType %>" readonly></td>
+                                            <td><input type="number" name="quantity-<%= stage.stage %>[]"
+                                                    value="<%= resource.quantity %>" min="0"
+                                                    oninput="validateQuantity(this)" readonly></td>
+                                            <td><input type="text" name="unit-<%= stage.stage %>[]"
+                                                    value="<%= resource.unit %>" readonly></td>
+                                            <td><input type="number" class="amount-input"
+                                                    name="amount-<%= stage.stage %>[]" value="<%= resource.amount %>"
+                                                    min="0" step="any" readonly></td>
+                                            <td class="actions">
+
+                                                <button type="button"
+                                                    onclick="editRow(this,<%= JSON.stringify(resource) %>)">Edit
+                                                </button>
+                                                <button type="button" onclick="deleteRow(this)"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                            <div class="stageTotal" id="stageTotal-<%= stage.stage %>">
+                                <strong>Stage <%= stage.stage %> Total:</strong> 0
+                            </div>
+                            <button type="button" onclick="addRow(<%= stage.stage %>)">Add Resource</button>
+                            <button type="button" onclick="deleteStage(<%= stage.stage %>)">Delete Stage</button>
                         </div>
-                        <button type="button" onclick="deleteStage(<%= stage.stage %>)">Delete Stage</button>
-                    </div>
-                <% }); %>
-            </div>
+                        <% }); %>
+                </div>
 
-            <!-- Single Add Stage button -->
-            <button type="button" onclick="addStage()">Add Stage</button>
+                <button type="button" onclick="addStage()">Add Stage</button>
 
-            <div class="calculate-buttons">
-                <button type="button" onclick="calculateTotal()">Calculate Total</button>
-                <button type="button" onclick="calculateStageTotals()">Calculate Stage Totals</button>
-            </div>
+                <div class="calculate-buttons">
+                    <button type="button" onclick="calculateTotal()">Calculate Total</button>
+                    <button type="button" onclick="calculateStageTotals()">Calculate Stage Totals</button>
+                </div>
 
-            <div id="totalAmount"></div>
-            <button type="submit">Submit Resources</button>
-        </form>
-    </div>
+                <div id="totalAmount"></div>
+                <button type="submit">Submit Resources</button>
+            </form>
+        </div>
 
-    <script>
-        let stageCount = <%= stages.length %>;  // Initialize stage count based on existing stages
+        <script>
+            let stageCount = <%= stages.length %>;
 
-        function addStage() {
-            stageCount++;
-            document.getElementById('stageCount').value = stageCount;
-            const stagesContainer = document.getElementById('stagesContainer');
-            const stageDiv = document.createElement('div');
-            stageDiv.classList.add('stage');
-            stageDiv.setAttribute('id', `stage-${stageCount}`); // Set unique id for the new stage
-            stageDiv.innerHTML = `
+            function addStage() {
+                stageCount++;
+                document.getElementById('stageCount').value = stageCount;
+                const stagesContainer = document.getElementById('stagesContainer');
+                const stageDiv = document.createElement('div');
+                stageDiv.classList.add('stage');
+                stageDiv.setAttribute('id', `stage-${stageCount}`);
+                stageDiv.innerHTML = `
                 <h3>Stage ${stageCount}</h3>
                 <table id="resourceTable-${stageCount}">
                     <thead>
@@ -193,131 +219,231 @@
                             <th>S.No</th>
                             <th>Resource</th>
                             <th>Quantity</th>
+                            <th>Unit/Description</th>
                             <th>Amount</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><input type="text" name="resourceType-${stageCount}[]" placeholder="Enter resource"></td>
-                            <td><input type="text" name="quantity-${stageCount}[]" placeholder="Enter quantity"></td>
-                            <td><input type="number" name="amount-${stageCount}[]" placeholder="Enter amount" min="0" step="any"></td>
-                            <td class="actions">
-                                <button type="button" onclick="addRow(${stageCount})"><i class="fas fa-plus"></i> Add</button>
-                                <button type="button" onclick="editRow(this)"><i class="fas fa-edit"></i> Edit</button>
-                                <button type="button" onclick="deleteRow(this)"><i class="fas fa-trash"></i> Delete</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
                 <div class="stageTotal" id="stageTotal-${stageCount}"><strong>Stage ${stageCount} Total:</strong> 0</div>
+                <button type="button" onclick="addRow(${stageCount})">Add Resource</button>
                 <button type="button" onclick="deleteStage(${stageCount})">Delete Stage</button>
             `;
-            stagesContainer.appendChild(stageDiv);
-        }
+                stagesContainer.appendChild(stageDiv);
+            }
+            // <tr>
+            //                 <td>1</td>
+            //                 <td><input type="text" name="resourceType-${stageCount}[]" placeholder="Enter resource"></td>
+            //                 <td><input type="number" name="quantity-${stageCount}[]" placeholder="Enter quantity" min="0" oninput="validateQuantity(this)"></td>
+            //                 <td><input type="text" name="unit-${stageCount}[]" placeholder="Enter unit/description"></td>
+            //                 <td><input type="number"  class="amount-input" name="amount-${stageCount}[]" placeholder="Enter amount" min="0" oninput="validateQuantity(this)"></td>
+            //                 <td class="actions">
 
-        function deleteStage(stageNumber) {
-    const stageDiv = document.getElementById(`stage-${stageNumber}`);
-    if (stageDiv) {
-        // Ask for confirmation before deletion
-        const confirmation = confirm("Are you sure you want to delete this stage?");
-        if (confirmation) {
-            // Proceed with deletion
-            fetch(`/delete_stage/${stageNumber}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ projectId: document.querySelector('input[name="projectId"]').value })
-            })
-            .then(response => {
-                if (response.ok) {
-                    stageDiv.remove(); // Remove the stage from the DOM
-                    stageCount--; // Decrease stage count
-                    document.getElementById('stageCount').value = stageCount; // Update stage count input
-                    calculateStageTotals(); // Recalculate totals after deletion
-                    calculateTotal(); // Recalculate overall total after deletion
-                } else {
-                    alert("Error deleting stage. Please try again.");
+            //                     <button type="button" onclick="editRow(this)"> Edit</button>
+            //                     <button type="button" onclick="deleteRow(this)"></i> Delete</button>
+            //                 </td>
+            //             </tr>
+
+
+            function deleteStage(stageNumber) {
+                const stageDiv = document.getElementById(`stage-${stageNumber}`);
+                if (stageDiv) {
+                    const confirmation = confirm("Are you sure you want to delete this stage?");
+                    if (confirmation) {
+                        fetch(`/delete_stage/${stageNumber}?projectId=${document.querySelector('input[name="projectId"]').value}`, {
+                            method: 'DELETE'
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.text(); // Get response text for success message
+                                } else {
+                                    throw new Error("Error deleting stage."); // Throw error for non-200 responses
+                                }
+                            })
+                            .then(message => {
+                                alert(message); // Show success message
+                                stageDiv.remove(); // Remove the stage from the DOM
+                            })
+                            .catch(err => {
+                                console.error("Error:", err);
+                                alert(err.message); // Show error message
+                            });
+                    }
                 }
-            })
-            .catch(err => {
-                console.error("Error:", err);
-                alert("Error deleting stage. Please try again.");
-            });
-        }
-    }
-}
+            }
 
-
-        function addRow(stageNumber) {
-            const tableBody = document.querySelector(`#resourceTable-${stageNumber} tbody`);
-            const rowCount = tableBody.rows.length + 1;
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
+            function addRow(stageNumber) {
+                const tableBody = document.querySelector(`#resourceTable-${stageNumber} tbody`);
+                const rowCount = tableBody.rows.length + 1;
+                const newRow = document.createElement('tr');
+                stageNumberInput = { stage: stageNumber }
+                newRow.innerHTML = `
                 <td>${rowCount}</td>
                 <td><input type="text" name="resourceType-${stageNumber}[]" placeholder="Enter resource type"></td>
-                <td><input type="text" name="quantity-${stageNumber}[]" placeholder="Enter quantity"></td>
-                <td><input type="number" name="amount-${stageNumber}[]" placeholder="Enter amount" min="0" step="any"></td>
+                <td><input type="number" name="quantity-${stageNumber}[]" placeholder="Enter quantity" min="0" oninput="validateQuantity(this)"></td>
+                <td><input type="text" name="unit-${stageNumber}[]" placeholder="Enter unit/description"></td>
+                <td><input type="number"  class="amount-input" name="amount-${stageNumber}[]" placeholder="Enter amount" min="0" oninput="validateQuantity(this)"></td>
+
                 <td class="actions">
-                    <button type="button" onclick="addRow(${stageNumber})"><i class="fas fa-plus"></i> Add</button>
-                    <button type="button" onclick="editRow(this)"><i class="fas fa-edit"></i> Edit</button>
-                    <button type="button" onclick="deleteRow(this)"><i class="fas fa-trash"></i> Delete</button>
+                 
+                    <button type="button" onclick="saveRow(this,stageNumberInput)">Save</button>
+                    <button type="button" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
                 </td>
             `;
-            tableBody.appendChild(newRow);
-        }
+                tableBody.appendChild(newRow);
+            }
 
-        function editRow(button) {
-            const row = button.closest('tr');
-            const inputs = row.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.disabled = !input.disabled; // Toggle edit mode
-            });
-            button.innerHTML = button.innerHTML.includes('Edit') ? '<i class="fas fa-save"></i> Save' : '<i class="fas fa-edit"></i> Edit';
-        }
+            // <td><input type="text" name="resources[${stageNumber}][resourceType]" placeholder="Enter resource type"></td>
+            //     <td><input type="number" name="resources[${stageNumber}][quantity]" placeholder="Enter quantity" min="0" oninput="validateQuantity(this)"></td>
+            //     <td><input type="text" name="resources[${stageNumber}][unit]" placeholder="Enter unit/description"></td>
+            //     <td><input type="number"  class="amount-input" name="resources[${stageNumber}][amount]" placeholder="Enter amount" min="0" oninput="validateQuantity(this)"></td>
 
-        function deleteRow(button) {
-            const row = button.closest('tr');
-            row.remove();
-        }
+            // <td><input type="text" name="resourceType-${stageNumber}[]" placeholder="Enter resource type"></td>
+            //     <td><input type="number" name="quantity-${stageNumber}[]" placeholder="Enter quantity" min="0" oninput="validateQuantity(this)"></td>
+            //     <td><input type="text" name="unit-${stageNumber}[]" placeholder="Enter unit/description"></td>
+            //     <td><input type="number"  class="amount-input" name="amount-${stageNumber}[]" placeholder="Enter amount" min="0" oninput="validateQuantity(this)"></td>
 
-        function calculateTotal() {
-            const totalAmountPerStage = {};
-            for (let i = 1; i <= stageCount; i++) {
-                let stageTotalAmount = 0;
-                const amountInputs = document.querySelectorAll(`#resourceTable-${i} tbody input[type="number"]`);
-                amountInputs.forEach(input => {
-                    const amount = parseFloat(input.value) || 0;
-                    stageTotalAmount += amount;
+            function editRow(button, r = {}) {
+
+                const row = button.closest('tr'); // Get the closest row
+                const inputs = row.querySelectorAll('input'); // Select all input fields in that row
+                // Toggle readonly attribute
+                inputs.forEach(input => {
+                    input.readOnly = !input.readOnly; // Toggle readOnly state
                 });
-                totalAmountPerStage[`Stage ${i}`] = stageTotalAmount;
+
+                // Change button text and action
+                if (button.innerText === "Edit") {
+                    button.innerText = "Save";
+                    button.onclick = () => saveRow(button, r); // Change onclick to saveRow
+                } else {
+                    button.innerText = "Edit"; // Reset back to Edit
+                    button.onclick = () => editRow(button); // Change onclick back to editRow
+                }
             }
 
-            let totalAmount = 0;
-            for (const [stage, amount] of Object.entries(totalAmountPerStage)) {
-                totalAmount += amount;
-            }
+            function saveRow(button, r = {}) {
+                const row = button.closest('tr');
+                const inputs = row.querySelectorAll('input');
 
-            document.getElementById('totalAmount').innerHTML = `<strong>Total Amount:</strong> ${totalAmount.toFixed(2)}`;
-        }
-
-        function calculateStageTotals() {
-            for (let i = 1; i <= stageCount; i++) {
-                let stageTotalAmount = 0;
-                const amountInputs = document.querySelectorAll(`#resourceTable-${i} tbody input[type="number"]`);
-                amountInputs.forEach(input => {
-                    const amount = parseFloat(input.value) || 0;
-                    stageTotalAmount += amount;
+                // Perform any validation or processing here if necessary
+                inputs.forEach(input => {
+                    input.readOnly = true; // Lock the inputs again after saving
                 });
-                document.getElementById(`stageTotal-${i}`).innerHTML = `<strong>Stage ${i} Total:</strong> ${stageTotalAmount.toFixed(2)}`;
+                console.log("R value", r)
+                if (Object.keys(r).length === 0) {
+                    // Insert
+                    // const resource = {
+                    //     resourceType: row.querySelector('input[name^="resources"][name$="[resourceType]"]').value,
+                    //     quantity: row.querySelector('input[name^="resources"][name$="[quantity]"]').value,
+                    //     unit: row.querySelector('input[name^="resources"][name$="[unit]"]').value,
+                    //     amount: row.querySelector('input[name^="resources"][name$="[amount]"]').value
+                    // };
+                    s = r.stage;
+                    const resource = {
+                        resourceType: document.querySelector(`input[name="resourceType-${s}[]"]`).value,
+                        quantity: document.querySelector(`input[name="quantity-${s}[]"]`).value,
+                        unit: document.querySelector(`input[name="unit-${s}[]"]`).value,
+                        amount: document.querySelector(`input[name="amount-${s}[]"]`).value
+                    }
+                    const inputString = document.querySelector(`input[name="resourceType-${s}[]"]`).name;
+                    const start = inputString.indexOf('[') + 1; // Find the first '[' and add 1 to get the start of the number
+                    const end = inputString.indexOf(']', start); // Find the corresponding ']'
+                    const number = inputString.substring(start, end); // Extract the number
+                    resource["Stage_id"] = number
+                    console.log(resource, number);
+                    // fetch("/save_resource", {
+                    //         method: 'POST', // or 'PUT' if updating
+                    //         headers: {
+                    //             'Content-Type': 'application/json',
+                    //         },
+                    //         body: JSON.stringify({ resource }), // Wrap in another object if necessary
+                    //     })
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         console.log('Success:', data);
+                    //     })
+                    //     .catch((error) => {
+                    //         console.error('Error:', error);
+                    //     });
+                } else {
+                    // Update
+
+                    console.log(r)
+                }
+
+
+                // Optionally, you can submit the form or make an AJAX call to save changes
+
+                // Reset button text and action
+                button.innerText = "Edit";
+                button.onclick = () => editRow(button); // Reset onclick to editRow
             }
-        }
+            function deleteRow(button) {
+                const confirmed = confirm("Are you sure you want to delete this row?");
 
-        // Initialize with one stage
-        addStage();
-    </script>
-</body>
+                // If the user confirms, delete the row
+                if (confirmed) {
+                    const row = button.closest('tr');
+                    row.remove();
+                }
 
-</html>
+            }
+
+
+
+            function calculateTotal() {
+                const totalAmountPerStage = {};
+                for (let i = 1; i <= stageCount; i++) {
+                    let stageTotalAmount = 0;
+                    // Only select inputs with class 'amount-input' to exclude quantities
+                    const amountInputs = document.querySelectorAll(`#resourceTable-${i} tbody input.amount-input`);
+                    amountInputs.forEach(input => {
+                        const amount = parseFloat(input.value) || 0;
+                        stageTotalAmount += amount;
+                    });
+                    totalAmountPerStage[`Stage ${i}`] = stageTotalAmount;
+                }
+
+                let totalAmount = 0;
+                for (const [stage, amount] of Object.entries(totalAmountPerStage)) {
+                    totalAmount += amount;
+                }
+
+                document.getElementById('totalAmount').innerHTML = `<strong>Total Amount:</strong> ${totalAmount.toFixed(2)}`;
+                document.getElementById('totalAmount').style.color = "white";
+            }
+
+
+            function calculateStageTotals() {
+                for (let i = 1; i <= stageCount; i++) {
+                    let stageTotalAmount = 0;
+                    // Select only the amount inputs for summation
+                    const amountInputs = document.querySelectorAll(`#resourceTable-${i} tbody input.amount-input`);
+                    amountInputs.forEach(input => {
+                        const amount = parseFloat(input.value) || 0; // Parse the amount, default to 0 if NaN
+                        stageTotalAmount += amount; // Sum the amounts
+                    });
+                    // Update the corresponding stage total display
+                    document.getElementById(`stageTotal-${i}`).innerHTML = `<strong>Stage ${i} Total:</strong> ${stageTotalAmount.toFixed(2)}`;
+                }
+            }
+
+            // Initialize with one stage
+            // addStage();
+            function validateQuantity(input) {
+                if (input.value < 0) {
+                    alert("Quantity cannot be negative.");
+                    input.value = 0; // Reset to 0 if negative
+                }
+            }
+        </script>
+    </div>
+    <div class="dashboard-btn">
+        <a href="/projects/<%= project.id %>/edit" class="btn"
+            style="background-color: rgb(245, 190, 9); color: rgb(75, 72, 72); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Dashboard</a>
+    </div>
+
+    </html>

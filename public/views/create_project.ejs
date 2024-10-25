@@ -152,7 +152,7 @@
             </div>
             <div class="form-group">
                 <label for="budget">Budget Allocation</label>
-                <input type="text" id="budget" name="budget" required>
+                <input type="number" id="budget" name="budget" min="0" required>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
@@ -163,7 +163,6 @@
                     <option value="hospital">Hospital</option>
                     <option value="school">School</option>
                     <option value="college">College</option>
-                    <option value="maintenance">Maintenance Project</option>
                     <option value="others">Others</option>
                 </select>
             </div>
@@ -178,7 +177,20 @@
                 </div>
             </div>
     
-            <button class="form-submit-btn" type="submit">Submit</button>
+            <button class="form-submit-btn" type="submit" onclick="return validateDates()">Submit</button>
         </form>
     </div>
 </div>
+<script>
+    function validateDates() {
+        const fromDate = document.getElementById('from-date').value;
+        const toDate = document.getElementById('to-date').value;
+
+        if (new Date(toDate) < new Date(fromDate)) {
+            alert('The "To" date cannot be earlier than the "From" date.');
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission if valid
+    }
+</script>

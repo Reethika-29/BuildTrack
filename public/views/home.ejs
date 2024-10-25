@@ -74,8 +74,11 @@
     <p class="welcome-message">Explore the latest projects and updates.</p>
     <div class="button-container">
       <a href="/projects" class="btn">View Projects</a>
-      <a href="/track" class="btn">Track</a>
+      <% if (role === 'MD') { %>
+        <a href="/register" class="btn">Register</a>
+    <% } %>
 
+     
     </div>
   </div>
 </body>

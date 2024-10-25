@@ -1,93 +1,242 @@
+<%- include('./common/navbar', { role, currentPage }); %>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fruit Input</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      width: 50%;
-      margin: 50px auto;
-    }
-    .fruit-inputs {
-      margin-top: 20px;
-    }
-    .fruit-input {
-      margin-bottom: 10px;
-    }
-    button {
-      padding: 10px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #218838;
-    }
-    .fruit-list {
-      margin-top: 30px;
-    }
-    .fruit-list ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    .fruit-list li {
-      margin-bottom: 5px;
-      font-size: 18px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone Stages and Contractors</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            /* Dark background */
+            color: #201e1e;
+            /* White text for better contrast */
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h1 {
+            color: rgb(245, 190, 9);
+            /* Header color */
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+
+        .table {
+            background-color: rgba(255, 255, 255, 0.4);
+            /* Slightly transparent white for table background */
+            border-radius: 5px;
+            border: 1px solid rgb(245, 190, 9);
+            /* Border for table */
+        }
+
+        th {
+            background-color: rgb(245, 190, 9);
+            color: rgb(75, 72, 72);
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+            padding: 10px;
+            /* Add padding for better spacing */
+        }
+
+        .container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            /* Slightly transparent white for container background */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Shadow for depth */
+            max-width: 1200px;
+            /* Limit the width of the container */
+            margin-left: auto;
+            /* Center the container */
+            margin-right: auto;
+            /* Center the container */
+        }
+
+        .no-items {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: rgb(245, 190, 9);
+            /* Color for no items message */
+        }
+
+        .dashboard-btn {
+            position: fixed;
+            bottom: 20px;
+            /* Positioning from the bottom */
+            left: 20px;
+            /* Positioning from the left */
+            z-index: 1000;
+        }
+
+        /* Hover effect for table rows */
+        tbody tr:hover {
+            background-color: rgba(245, 190, 9, 0.2);
+        }
+
+        #content-to-print {
+            overflow: auto;
+            /* Enables scrolling */
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Enter Number of Fruits</h1>
-    <form id="fruitForm" method="POST" action="/submit">
-      <label for="numFruits">How many fruits?</label>
-      <input type="number" id="numFruits" name="numFruits" min="1" required>
-      <button type="button" id="generateInputs">Generate Inputs</button>
+    <h1 class="mt-5">Milestones</h1>
+    <center>
+        <% if (items.length > 0) { %>
+            <form action="/submit-budget/" method="POST">
+                <input type="hidden" name="projectId" value="<%= project.id %>">
 
-      <div class="fruit-inputs" id="fruitInputs"></div>
-      
-      <button type="submit" id="submitForm" style="display:none;">Submit Fruits</button>
-    </form>
-
-    <div class="fruit-list">
-      <h2>Stored Fruits:</h2>
-      <% if (fruits.length > 0) { %>
-        <ul>
-          <% fruits.forEach(function(fruit) { %>
-            <% fruit.names.forEach(function(name) { %>
-              <li><%= name %></li>
-            <% }); %>
-          <% }); %>
-        </ul>
-      <% } else { %>
-        <p>No fruits saved yet.</p>
-      <% } %>
-    </div>
-  </div>
-
-  <script>
-    document.getElementById('generateInputs').addEventListener('click', function() {
-      const numFruits = document.getElementById('numFruits').value;
-      const fruitInputsContainer = document.getElementById('fruitInputs');
-      fruitInputsContainer.innerHTML = ''; // Clear existing inputs
-
-      for (let i = 1; i <= numFruits; i++) {
-        const inputDiv = document.createElement('div');
-        inputDiv.classList.add('fruit-input');
-        inputDiv.innerHTML = `
-          <label for="fruit${i}">Fruit ${i} Name:</label>
-          <input type="text" id="fruit${i}" name="fruits[]" required>
-        `;
-        fruitInputsContainer.appendChild(inputDiv);
-      }
-
-      document.getElementById('submitForm').style.display = 'block'; // Show submit button
-    });
-  </script>
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Name</th>
+                        <th>Estimated Budget</th>
+                        <th>Total Stage Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(item => { %>
+                    <% item.stages.forEach(stage => { %>
+                    <tr>
+                        <td>
+                            <%= stage.stage %>
+                        </td>
+                        <td>
+                            <%= stage.name %>
+                        </td>
+                        <td>
+                            <input type="number" name="estimatedBudgets[<%= stage.stage %>]" class="form-control"
+                                placeholder="Enter Estimated Budget" required>
+                        </td>
+                        <td>
+                            <%= stageAmountMap.get(stage.stage) || 'N/A' %> <!-- Display totalStageAmount or 'N/A' if not found -->
+                        </td>
+                    </tr>
+                    <% }) %>
+                    <% }) %>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary mt-3">Submit Budget</button>
+        </form>
+        <% } else { %>
+        <p class="no-items">No milestone stages found.</p>
+        <% } %>
+    </center>
+    <script>
+        alert("Project ID: <%= project.id %>");
+    </script>
+    
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const budgetStageSchema = new mongoose.Schema({
+  projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Project'
+  },
+  stages: [{
+      stage: {
+          type: String,
+          required: true
+      },
+      name: {
+          type: String,
+          required: true
+      },
+      estimatedBudget: {
+          type: Number,
+          required: false
+      },
+      totalStageAmount: {
+          type: Number,
+          required: false
+      }
+  }]
+});
+
+const BudgetStage = mongoose.model('BudgetStage', budgetStageSchema);
+app.get('/budget_Stage/:projectId', async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Get the projectId from the route parameters
+    const currentPage = "report"; // Current page
+    const role = req.session.user.role; // User role from session
+    const project = { id: projectId, name: 'Sample Project' }; 
+
+    // Fetch only items related to the specific projectId
+    const items = await MilestoneStage.find({ projectId: projectId }); // Filter by projectId
+    const contractors = await Contractor.find({ projectId: projectId });
+    const resources = await Resource.findOne({ projectId: projectId }, 'stages.stage stages.totalStageAmount'); // Resource stages with totalStageAmount
+
+    const projects = await Project.find({ _id: projectId });
+    const hrSchema = await HR.find({ projectId: projectId });
+    // Convert resource stages to a map for quick lookup
+    console.log('Project ID:', projectId); // Debugging line
+
+    const stageAmountMap = new Map();
+    if (resources) {
+      resources.stages.forEach(stage => {
+        stageAmountMap.set(stage.stage, stage.totalStageAmount);
+      });
+    }
+    // s
+    res.render('budget_Stage', { projects:projects, items: items, contractors: contractors, resources: resources, stageAmountMap: stageAmountMap, currentPage: currentPage, role: role,project: project  });
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/submit-budget/', async (req, res) => {
+  try {
+      const { projectId } = req.body; // Get projectId from request body
+      const estimatedBudgets = req.body.estimatedBudgets; // Get estimated budgets
+
+      // Create a new BudgetStage object
+      const budgetStageData = {
+          projectId: projectId,
+          stages: Object.keys(estimatedBudgets).map(stage => ({
+              stage: stage,
+              name: stage, // Adjust this if you want to capture a specific name differently
+              estimatedBudget: Number(estimatedBudgets[stage]), // Convert to number
+              totalStageAmount: 0 // Set to 0 or calculate if necessary
+          }))
+      };
+
+      // Save the new BudgetStage to the database
+      const newBudgetStage = new BudgetStage(budgetStageData);
+      await newBudgetStage.save();
+
+      res.redirect(`/budget_Stage/${projectId}`); // Redirect after saving
+  } catch (error) {
+      console.error('Error submitting budget stage:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});

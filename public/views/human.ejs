@@ -1,0 +1,168 @@
+<%- include('./common/navbar', { role, currentPage }); %>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Human Resource Management</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <style>
+            .body {
+                background-color: #f0f0f0;
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding-top: 70px;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+                background: url('/images/pattern.png') no-repeat center center fixed;
+                background-size: cover;
+            }
+
+            .form-container {
+                background-color: rgba(0, 0, 0, 0.8);
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                width: 100%;
+                max-width: 600px;
+                margin-top: 20px;
+                color: white;
+            }
+
+            h1 {
+                text-align: center;
+                color: rgb(75, 72, 72);
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="date"] {
+                width: calc(100% - 20px);
+                padding: 8px;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            button {
+                background-color: rgb(245, 190, 9);
+                color: rgb(75, 72, 72);
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            button:hover {
+                background-color: rgb(200, 160, 7);
+            }
+
+            .dashboard-btn {
+                position: fixed;
+                bottom: 20px;
+                /* Positioning from the bottom */
+                left: 20px;
+                /* Positioning from the left */
+                z-index: 1000;
+            }
+        </style>
+    </head>
+
+    <div class="body">
+        <div class="form-container">
+
+            <h1 style="color: #ffffff;">Add Human Resource</h1>
+
+            <form id="hrForm" action="/add_hr" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="designation">Designation:</label>
+                <input type="text" id="designation" name="designation" required>
+
+                <label for="salary">Salary:</label>
+                <input type="number" id="salary" name="salary" required min="0" step="any">
+
+                <label for="fromDate">From Date:</label>
+                <input type="date" id="fromDate" name="fromDate" required>
+
+                <label for="toDate">To Date:</label>
+                <input type="date" id="toDate" name="toDate">
+
+                <!-- Hidden input to pass projectId -->
+                <input type="hidden" name="projectId" value="<%= project.id %>">
+
+                <button type="submit">Add Resource</button>
+            </form>
+
+
+            <h2 style="color: #ffffff;">Existing Human Resources</h2>
+            <div id="existingResources">
+                <% hrEntries.forEach(hr=> { %>
+                    <div class="resource-entry" id="hr-entry-<%= hr._id %>">
+                        <strong>Name:</strong>
+                        <%= hr.name %><br>
+                            <strong>Designation:</strong>
+                            <%= hr.designation %><br>
+                                <strong>Salary:</strong>
+                                <%= hr.salary %><br>
+                                    <strong>From Date:</strong>
+                                    <%= new Date(hr.fromDate).toLocaleDateString() %><br>
+                                        <strong>To Date:</strong>
+                                        <%= hr.toDate ? new Date(hr.toDate).toLocaleDateString() : 'N/A' %><br>
+                                            <button
+                                                onclick="editHR('<%= hr._id %>', '<%= hr.name %>', '<%= hr.designation %>', <%= hr.salary %>, '<%= hr.fromDate.toISOString() %>', '<%= hr.toDate ? hr.toDate.toISOString() : '' %>')">Edit</button>
+                                            <button onclick="deleteHR('<%= hr._id %>', this)">Delete</button>
+                    </div>
+                    <hr>
+                    <% }) %>
+            </div>
+        </div>
+
+        <script>
+            function editHR(id, name, designation, salary, fromDate, toDate) {
+                document.getElementById('name').value = name;
+                document.getElementById('designation').value = designation;
+                document.getElementById('salary').value = salary;
+                document.getElementById('fromDate').value = fromDate.split('T')[0]; // Format for date input
+                document.getElementById('toDate').value = toDate ? toDate.split('T')[0] : ''; // Format for date input
+
+                // Change form action to update
+                const form = document.getElementById('hrForm');
+                form.action = `/update_hr/${id}`; // Update action URL
+            }
+            async function deleteHR(hrId, button) {
+                const confirmation = confirm('Are you sure you want to delete this resource?');
+                if (!confirmation) return;
+
+                try {
+                    const response = await fetch(`/hr/${hrId}`, {
+                        method: 'DELETE'
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Resource deleted successfully!');
+                        // Remove the resource entry from the UI
+                        const resourceEntry = button.parentElement;
+                        resourceEntry.remove(); // Remove the parent div of the button
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Error deleting resource:', error);
+                    alert('Failed to delete resource.');
+                }
+            }
+        </script>
+    </div>
+    <div class="dashboard-btn">
+        <a href="/projects/<%= project.id %>/edit" class="btn"
+            style="background-color: rgb(245, 190, 9); color: rgb(75, 72, 72); padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Dashboard</a>
+    </div>
+
+    </html>

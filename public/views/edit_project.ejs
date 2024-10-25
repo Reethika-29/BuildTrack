@@ -192,14 +192,14 @@
                     <div class="card-title">Milestone</div>
                 </div>
             </div>
-            <div class="card" onclick="window.location.href='/budget_Stage/<%= project._id %>'">
+            <!-- <div class="card" onclick="window.location.href='/budget_Stage/<%= project._id %>'">
                 <div class="card-content">
                     <div class="card-title">Budget</div>
                 </div>
-            </div>
+            </div> -->
             <div class="card">
                 <div class="card-content" onclick="window.location.href='/contractor/<%=project._id %>'">
-                    <div class="card-title">Contractor Details</div>
+                    <div class="card-title">Contract Details</div>
                 </div>
             </div>
             <div class="card" onclick="window.location.href='/resource/<%=project._id %>'">
@@ -207,24 +207,39 @@
                     <div class="card-title">Amount Spent on Resources</div>
                 </div>
             </div>
+            <% if (role === 'MD') { %> <!-- Only show Human Resource card for MD role -->
+                <div class="card" onclick="window.location.href='/human/<%=project._id %>'">
+                    <div class="card-content">
+                        <div class="card-title">Human Resources</div>
+                    </div>
+                </div>
+                <% } %>
             <div class="card" onclick="window.location.href='/upload/<%= project._id %>'">
                 <div class="card-content">
                     <div class="card-title">Documents</div>
                 </div>
             </div>
-            <div class="card" onclick="window.location.href='/todo/<%=project._id %>'">
-                <div class="card-content">
-                    <div class="card-title">To-Do</div>
+            <!-- <% if (role === 'Manager') { %>
+                <div class="card" onclick="window.location.href='/todo/<%=project._id %>'">
+                    <div class="card-content">
+                        <div class="card-title">To-Do</div>
+                    </div>
                 </div>
-            </div>
+            <% } %> -->
+            
             <div class="card" onclick="window.location.href='/webcamjavascript/test.html'">
                 <div class="card-content">
                     <div class="card-title">CCTV</div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card" onclick="window.location.href='/photos/<%=project._id %>'" >
                 <div class="card-content">
-                    <div class="card-title">Report and Photos</div>
+                    <div class="card-title"> Photos</div>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='/report/<%=project._id %>'" >
+                <div class="card-content">
+                    <div class="card-title">Report</div>
                 </div>
             </div>
         </div>
